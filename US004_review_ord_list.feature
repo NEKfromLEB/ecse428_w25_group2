@@ -1,7 +1,10 @@
 Feature: Review Order List
-User Story: As an Employee,
-            I want to see a list of all orders and their status 
-            so that I can ensure their completion.
+
+As an Employee,
+I want to see a list of all orders and their status 
+so that I can ensure their completion.
+
+
 Scenario Outline: View all orders. (Normal flow) 
             Given I am signed in as an Employee
             When I navigate to the orders page 
