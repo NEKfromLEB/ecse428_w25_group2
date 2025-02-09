@@ -30,7 +30,7 @@ So that I can verify its legitimacy before purchasing it from them.
       | Puma   | Arsenal     | PQR9999      | 2020 | None  | 8             |  
       | Adidas | Juventus    | LMN3333      | 2022 | None  | 9             |  
     
-  Scenario: Error - Incomplete Form Submission  
+  Scenario: Error - Incomplete Form Submission (Error flow) 
     When the client submits a jersey authentication form with brand "<brand>", model "<model>", serial number "<serialNumber>", year "<year>", and proof of authenticity "<proof>"  
     Then the system prevents submission if any of those fields are empty 
     And an error message is displayed: "Please complete all required fields before submitting."  
