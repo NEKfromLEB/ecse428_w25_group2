@@ -12,7 +12,7 @@ So that I can verify its legitimacy before purchasing it from them.
     Then the number of pending authentication requests in the system shall be "<totalRequests>"  
     And the jersey with brand "<brand>", club "<club>", serial number "<serialNumber>", year "<year>", and proof of authenticity "<proof>" shall exist in the system  
     Examples: 
-      | brand  | club     | serialNumber | year | proof              | totalRequests |  
+      | brand  | club      | serialNumber | year | proof              | totalRequests |  
       | Nike   | PSG Home  | ABC1234      | 2021 | Receipt & Photos   | 3             |  
       | Adidas | Bayern    | XYZ5678      | 2020 | None               | 4             |  
       | Puma   | Dortmund  | LMN7890      | 2019 | Receipt & Photos   | 2             |  
@@ -25,7 +25,7 @@ So that I can verify its legitimacy before purchasing it from them.
     And the client can proceed with submission  
     And the store owner is notified of a submission requiring manual verification  
     Examples:  
-      | brand  | club       | serialNumber | year | proof | totalRequests |  
+      | brand  | club        | serialNumber | year | proof | totalRequests |  
       | Nike   | Inter Milan | XYZ4567      | 2021 | None  | 7             |  
       | Puma   | Arsenal     | PQR9999      | 2020 | None  | 8             |  
       | Adidas | Juventus    | LMN3333      | 2022 | None  | 9             |  
@@ -37,7 +37,7 @@ So that I can verify its legitimacy before purchasing it from them.
     And the form remains on the page for correction  
 
   Examples:  
-    | brand  | club  | serialNumber | year | proof              |  
+    | brand  | club   | serialNumber | year | proof              |  
     | Nike   | PSG    |              | 2021 | Receipt & Photos   |  
     | Puma   |        | ABC1234      | 2020 | Manufacturer Cert. |  
     |        | Bayern | XYZ5678      | 2019 | None               |  
