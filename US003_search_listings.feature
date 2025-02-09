@@ -49,7 +49,7 @@ Scenario Outline: Successfully search for listings of a specific sport (Alternat
 
 Scenario Outline: Unsuccessfully search for listings because query does not match any listing (Error Flow)
     Given no listings match "<search_query>"
-    When the user searches for "<search_query>
+    When the user searches for "<search_query>"
     Then "<listings>" is empty
     And the system warns the user that 0 matches were found
 
