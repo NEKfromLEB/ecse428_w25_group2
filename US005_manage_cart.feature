@@ -83,8 +83,7 @@ Feature: Manage the cart
   # VIEWING THE CART
   ########################################################################
   Scenario: View a cart containing multiple items
-    
-    And my cart contains "2006 AC Milan Home" and "1984 Las Vegas Raiders"
+    Given my cart contains "2006 AC Milan Home" and "1984 Las Vegas Raiders"
     When I view my cart
     Then I should see the items "2006 AC Milan Home" and "1984 Las Vegas Raiders"
     And the cart item count should be 2
@@ -105,8 +104,7 @@ Feature: Manage the cart
   # CLEARING THE CART
   ########################################################################
   Scenario: Clear the cart containing multiple items
-    
-    And my cart contains "2006 AC Milan Home", "2002 Brazil Home", and "1992 Chicago Bulls"
+    Given my cart contains "2006 AC Milan Home", "2002 Brazil Home", and "1992 Chicago Bulls"
     When I choose to clear my cart
     Then my cart should be empty
     And I should see a message "Cart cleared successfully"
