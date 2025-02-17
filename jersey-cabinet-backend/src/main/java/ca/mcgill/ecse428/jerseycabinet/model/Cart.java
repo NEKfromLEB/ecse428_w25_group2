@@ -6,8 +6,11 @@ package ca.mcgill.ecse428.jerseycabinet.model;
 
 import java.util.*;
 
-// line 36 "model.ump"
-// line 79 "model.ump"
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+
+@Entity
 public class Cart
 {
 
@@ -16,6 +19,9 @@ public class Cart
   //------------------------
 
   //Cart Attributes
+  @Id
+  @GeneratedValue
+  private int id;
   private int totalPrice;
 
   //Cart Associations

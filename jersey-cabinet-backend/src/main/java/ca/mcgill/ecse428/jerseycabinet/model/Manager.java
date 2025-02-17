@@ -1,12 +1,8 @@
 package ca.mcgill.ecse428.jerseycabinet.model;
 
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
+import jakarta.persistence.Entity;
 
-
-
-// line 16 "model.ump"
-// line 63 "model.ump"
+@Entity
 public class Manager extends Staff
 {
 
@@ -17,6 +13,8 @@ public class Manager extends Staff
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  protected Manager(){
+  }
 
   public Manager(int aId, String aEmail, String aPassword)
   {

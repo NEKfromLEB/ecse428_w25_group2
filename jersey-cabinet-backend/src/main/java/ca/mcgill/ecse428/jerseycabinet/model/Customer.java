@@ -1,13 +1,9 @@
 package ca.mcgill.ecse428.jerseycabinet.model;
 
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
-
-
 import java.util.*;
+import jakarta.persistence.Entity;
 
-// line 20 "model.ump"
-// line 68 "model.ump"
+@Entity
 public class Customer extends User
 {
 

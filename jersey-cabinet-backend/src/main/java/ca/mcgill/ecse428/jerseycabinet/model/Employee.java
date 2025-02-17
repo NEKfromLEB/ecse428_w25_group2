@@ -1,13 +1,10 @@
 package ca.mcgill.ecse428.jerseycabinet.model;
 
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
-
-
 import java.util.*;
 
-// line 11 "model.ump"
-// line 58 "model.ump"
+import jakarta.persistence.Entity;
+
+@Entity
 public class Employee extends Staff
 {
 
@@ -173,38 +170,44 @@ public class Employee extends Staff
   /* Code from template association_AddManyToOne */
   public Offer addOffer(Offer.OfferState aOfferState, int aPrice, Jersey aJersey)
   {
-    return new Offer(aOfferState, aPrice, aJersey, this);
+    Offer.Key key = new Offer.Key(aJersey, this); 
+    Offer offer = new Offer(key, aOfferState, aPrice); 
+    aJersey.addOffer(offer); 
+    offers.add(offer); 
+    return offer; 
   }
+
 
   public boolean addOffer(Offer aOffer)
   {
     boolean wasAdded = false;
-    if (offers.contains(aOffer)) { return false; }
-    Employee existingEmployee = aOffer.getEmployee();
-    boolean isNewEmployee = existingEmployee != null && !this.equals(existingEmployee);
-    if (isNewEmployee)
-    {
-      aOffer.setEmployee(this);
+    if (offers.contains(aOffer)) {
+        return false;
     }
-    else
-    {
-      offers.add(aOffer);
+    
+    Offer.Key existingKey = aOffer.getKey();
+    if (existingKey != null && !this.equals(existingKey.getEmployee())) {
+        existingKey.setEmployee(this);
     }
+    
+    offers.add(aOffer);
     wasAdded = true;
     return wasAdded;
   }
 
+
   public boolean removeOffer(Offer aOffer)
-  {
+{
     boolean wasRemoved = false;
-    //Unable to remove aOffer, as it must always have a employee
-    if (!this.equals(aOffer.getEmployee()))
+    if (this.equals(aOffer.getKey().getEmployee()))
     {
-      offers.remove(aOffer);
-      wasRemoved = true;
+        offers.remove(aOffer); 
+        aOffer.delete(); 
+        wasRemoved = true;
     }
     return wasRemoved;
-  }
+}
+
   /* Code from template association_AddIndexControlFunctions */
   public boolean addOfferAt(Offer aOffer, int index)
   {  
