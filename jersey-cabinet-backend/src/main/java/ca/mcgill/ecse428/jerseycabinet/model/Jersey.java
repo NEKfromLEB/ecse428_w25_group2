@@ -7,6 +7,7 @@ package ca.mcgill.ecse428.jerseycabinet.model;
 import java.util.*;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 
 // line 28 "model.ump"
 // line 73 "model.ump"
@@ -20,6 +21,11 @@ public class Jersey
 
   public enum RequestState { Rejected, Unlisted, Listed, Bought }
 
+  //-----------------------
+  // MEMBER VARIABLES
+  //-----------------------
+  private static int nextId = 1;
+
   //------------------------
   // MEMBER VARIABLES
   //------------------------
@@ -27,6 +33,12 @@ public class Jersey
   //Jersey Attributes
   private RequestState requestState;
   private String description;
+
+  //Autounique Attributes
+  @Id
+  private int id;
+  
+  
 
   //Jersey Associations
   private Employee employee;
@@ -41,6 +53,7 @@ public class Jersey
   {
     requestState = aRequestState;
     description = aDescription;
+    id = nextId++;
     boolean didAddEmployee = setEmployee(aEmployee);
     if (!didAddEmployee)
     {
@@ -82,6 +95,10 @@ public class Jersey
   public String getDescription()
   {
     return description;
+  }
+
+  public int getId(){
+    return id;
   }
   /* Code from template association_GetOne */
   public Employee getEmployee()
@@ -259,6 +276,7 @@ public class Jersey
   public String toString()
   {
     return super.toString() + "["+
+            "id" + ":" + getId()+ "," +
             "description" + ":" + getDescription()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "requestState" + "=" + (getRequestState() != null ? !getRequestState().equals(this)  ? getRequestState().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "employee = "+(getEmployee()!=null?Integer.toHexString(System.identityHashCode(getEmployee())):"null") + System.getProperties().getProperty("line.separator") +
