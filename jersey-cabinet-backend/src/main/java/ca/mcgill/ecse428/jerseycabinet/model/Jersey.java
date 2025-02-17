@@ -184,39 +184,38 @@ public class Jersey
     return 0;
   }
   /* Code from template association_AddManyToOne */
-  public Offer addOffer(Offer.OfferState aOfferState, int aPrice, Employee aEmployee)
-  {
-    return new Offer(aOfferState, aPrice, this, aEmployee);
-  }
+  public Offer addOffer(Offer.OfferState aOfferState, int aPrice, Employee aEmployee) {
+    Offer.Key key = new Offer.Key(this, aEmployee); 
+    Offer newOffer = new Offer(key, aOfferState, aPrice);
+    this.offers.add(newOffer); 
+    return newOffer;
+}
 
-  public boolean addOffer(Offer aOffer)
-  {
-    boolean wasAdded = false;
-    if (offers.contains(aOffer)) { return false; }
-    Jersey existingJersey = aOffer.getJersey();
-    boolean isNewJersey = existingJersey != null && !this.equals(existingJersey);
-    if (isNewJersey)
-    {
-      aOffer.setJersey(this);
-    }
-    else
-    {
+  public boolean addOffer(Offer aOffer) {
+      if (aOffer == null || offers.contains(aOffer)) {
+          return false;
+      }
+
+      Jersey existingJersey = aOffer.getKey().getJersey(); 
+      if (existingJersey != null && !this.equals(existingJersey)) {
+          existingJersey.removeOffer(aOffer); 
+      }
+
+      aOffer.getKey().setJersey(this); 
       offers.add(aOffer);
-    }
-    wasAdded = true;
-    return wasAdded;
+      return true;
   }
 
-  public boolean removeOffer(Offer aOffer)
-  {
-    boolean wasRemoved = false;
-    //Unable to remove aOffer, as it must always have a jersey
-    if (!this.equals(aOffer.getJersey()))
-    {
-      offers.remove(aOffer);
-      wasRemoved = true;
-    }
-    return wasRemoved;
+  public boolean removeOffer(Offer aOffer) {
+      if (aOffer == null || !offers.contains(aOffer)) {
+          return false;
+      }
+
+      if (this.equals(aOffer.getKey().getJersey())) {
+          offers.remove(aOffer);
+          return true;
+      }
+      return false;
   }
   /* Code from template association_AddIndexControlFunctions */
   public boolean addOfferAt(Offer aOffer, int index)

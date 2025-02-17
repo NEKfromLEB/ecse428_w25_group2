@@ -48,6 +48,20 @@ public class Offer {
     this.price = price;
   }
 
+  public void delete() {
+    if (this.getKey() != null) {
+        Jersey jersey = this.getKey().getJersey();
+        if (jersey != null) {
+            jersey.removeOffer(this); 
+        }
+        Employee employee = this.getKey().getEmployee();
+        if (employee != null) {
+            employee.removeOffer(this); 
+        }
+    }
+  } 
+
+
   @Embeddable
   public static class Key implements Serializable {
     @ManyToOne
