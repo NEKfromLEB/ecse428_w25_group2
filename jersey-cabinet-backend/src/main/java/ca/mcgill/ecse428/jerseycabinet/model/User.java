@@ -1,18 +1,22 @@
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
+package ca.mcgill.ecse428.jerseycabinet.model;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.MappedSuperclass;
 
-
-// line 2 "model.ump"
-// line 91 "model.ump"
-public class User
+@MappedSuperclass
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class User
 {
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
-  //User Attributes
+  @Id
+  @GeneratedValue
   private int id;
   private String email;
   private String password;
@@ -20,6 +24,9 @@ public class User
   //------------------------
   // CONSTRUCTOR
   //------------------------
+
+  protected User() {
+  }
 
   public User(int aId, String aEmail, String aPassword)
   {

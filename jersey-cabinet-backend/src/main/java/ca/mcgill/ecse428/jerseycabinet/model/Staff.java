@@ -1,11 +1,12 @@
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
+package ca.mcgill.ecse428.jerseycabinet.model;
 
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.MappedSuperclass;
 
-
-// line 7 "model.ump"
-// line 53 "model.ump"
-public class Staff extends User
+@MappedSuperclass
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Staff extends User
 {
 
   //------------------------
@@ -15,6 +16,8 @@ public class Staff extends User
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  protected Staff(){
+  }
 
   public Staff(int aId, String aEmail, String aPassword)
   {
