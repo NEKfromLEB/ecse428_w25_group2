@@ -4,6 +4,7 @@ import org.hibernate.annotations.TimeZoneStorage;
 
 import ca.mcgill.ecse428.jerseycabinet.dao.JerseyRepository;
 import ca.mcgill.ecse428.jerseycabinet.model.Jersey;
+import ca.mcgill.ecse428.jerseycabinet.model.Jersey.RequestState;
 
 @SpringBootTest
 public class AuthentificationServiceTests {
@@ -38,13 +39,13 @@ public class AuthentificationServiceTests {
         //Set Up
         int id = 42;
         when(repo.findJerseyById(id)).thenReturn(null);
+        //Action
         try{
             service.findJerseyById(id);
         }catch (ServiceException e){
             error = e.getMessage();
         }
-
-        //assertions
+        //Assertions
         assertEquals("There is no jersey with ID" + id,error);
     }
 
@@ -67,6 +68,23 @@ public class AuthentificationServiceTests {
 
     @Test 
     public void testAcceptJersey(){
+         //Set up
+         int id = 1;
+         Employee employee = new Employee(1,"a@gmail.com","abc");
+         Customer customer = new Customer(3,"b@gmail.com","hi");
+         Jersey jersey_test = new Jersey(null, "This is a jersey",employee,customer);
+         Jersey expected_jersey = new Jersey(RequestState.Unlisted,"This is a jersey",employee,customer);
+         when(repo.findJerseyById(id)).thenReturn(jersey_test);
+ 
+         //Act 
+         Jersey jersey = service.acceptRequestById(id);
+ 
+         //Assert
+         assertNotNull(jersey);
+         assertEquals(expected_jersey.getRequestState(),jersey.getRequestState());
+         assertEquals(expected_jersey.getDescription(),jersey.getDescription());
+         assertEquals(expected_jersey.getEmployee(),jersey.getEmployee());
+         assertEquals(expected_jersey.getSeller(),jersey.getSeller());
 
     }
 

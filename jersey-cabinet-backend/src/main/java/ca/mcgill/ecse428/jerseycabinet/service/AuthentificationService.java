@@ -24,7 +24,7 @@ public class AuthentificationService {
     }
 
     @Transactional
-    public ArrayList<Jersey> findAllUnlistedJerseys(){
+    public ArrayList<Jersey> findAllUnreviewedJerseys(){
         Iterable<Jersey> all_jerseys = jerseyRepo.findAll();
         ArrayList<Jersey> unlisted_jerseys = new ArrayList();
         for (Jersey j: all_jerseys){
