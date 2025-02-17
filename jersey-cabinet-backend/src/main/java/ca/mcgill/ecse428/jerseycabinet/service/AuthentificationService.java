@@ -18,7 +18,7 @@ public class AuthentificationService {
     public Jersey findJerseyById(int id){
         Jersey j = jerseyRepo.findJerseyById(id);
         if (j == null){
-            //throw error
+            throw new Exception("There is no jersey with ID" + id,error);
         }
         return j;
     }
@@ -37,16 +37,17 @@ public class AuthentificationService {
     }
 
     @Transactional
-    public void acceptRequestById(int id){
+    public Jersey acceptRequestById(int id){
         Jersey j = jerseyRepo.findJerseyById(id);
         j.setRequestState(RequestState.Unlisted);
-
+        return jerseyRepo.save(j);
     }
 
     @Transactional
-    public void rejectRequestById(int id){
+    public Jersey rejectRequestById(int id){
         Jersey j = jerseyRepo.findJerseyById(id);
         j.setRequestState(RequestState.Rejected);
+        return jerseyRepo.save(j);
     }
 
     

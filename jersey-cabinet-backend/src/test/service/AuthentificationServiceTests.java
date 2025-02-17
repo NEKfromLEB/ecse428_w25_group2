@@ -54,11 +54,22 @@ public class AuthentificationServiceTests {
         //setup
         ArrayList<Jersey> listJerseys = new ArrayList<Jersey>();
         //create  new object
-        //setid
-        //add to list
+        Employee employee = new Employee(1,"a@gmail.com","abc");
+        Customer customer = new Customer(3,"b@gmail.com","hi");
+        Jersey jersey1 = new Jersey(null, "This is a jersey",employee,customer);
+        Jersey jersey2 = new Jersey(RequestState.Rejected, "This is a jersey",employee,customer);
+        Jersey jersey3 = new Jersey(RequestState.Unlisted, "This is a jersey",employee,customer);
+        Jersey jersey4 = new Jersey(RequestState.Bought, "This is a jersey",employee,customer);
+        Jersey jersey5 = new Jersey(RequestState.Listed,"This is a jersey",employee,customer);
+        Jersey jersey6 = new Jersey(null,"This is a jersey", employee,customer);
+
+        listJerseys.add(jersey1); listJerseys.add(jersey2); listJerseys.add(jersey3); listJerseys.add(jersey4);
+        listJerseys.add(jersey5); listJerseys.add(jersey6);
+
+        when(repo.findAll()).thenReturn(listJerseys);
 
         //act
-        ArrayList<Jersey> foundUnreviewedJerseys = (ArrayList<Jersey>) service.findAllUnlistedJerseys();
+        ArrayList<Jersey> foundUnreviewedJerseys = (ArrayList<Jersey>) service.findAllUnreviewedJerseys();
 
         //assertions
         assertNotNull(foundUnreviewedJerseys);
@@ -75,9 +86,11 @@ public class AuthentificationServiceTests {
          Jersey jersey_test = new Jersey(null, "This is a jersey",employee,customer);
          Jersey expected_jersey = new Jersey(RequestState.Unlisted,"This is a jersey",employee,customer);
          when(repo.findJerseyById(id)).thenReturn(jersey_test);
+         when(repo.save(any(Jersey.class))).thenReturn(jersey_test); 
  
          //Act 
          Jersey jersey = service.acceptRequestById(id);
+
  
          //Assert
          assertNotNull(jersey);
@@ -90,6 +103,26 @@ public class AuthentificationServiceTests {
 
     @Test 
     public void testRejectJersey(){
+        //Set up
+        int id = 1;
+        Employee employee = new Employee(1,"a@gmail.com","abc");
+        Customer customer = new Customer(3,"b@gmail.com","hi");
+        Jersey jersey_test = new Jersey(null, "This is a jersey",employee,customer);
+        Jersey expected_jersey = new Jersey(RequestState.Rejected,"This is a jersey",employee,customer);
+        when(repo.findJerseyById(id)).thenReturn(jersey_test);
+        when(repo.save(any(Jersey.class))).thenReturn(jersey_test); 
+
+        //Act 
+        Jersey jersey = service.rejectRequestById(id);
+
+
+        //Assert
+        assertNotNull(jersey);
+        assertEquals(expected_jersey.getRequestState(),jersey.getRequestState());
+        assertEquals(expected_jersey.getDescription(),jersey.getDescription());
+        assertEquals(expected_jersey.getEmployee(),jersey.getEmployee());
+        assertEquals(expected_jersey.getSeller(),jersey.getSeller());
+
 
     }
 }
