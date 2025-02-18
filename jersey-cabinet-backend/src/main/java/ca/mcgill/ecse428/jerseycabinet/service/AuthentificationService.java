@@ -15,10 +15,10 @@ public class AuthentificationService {
     private JerseyRepository jerseyRepo;
 
     @Transactional
-    public Jersey findJerseyById(int id){
+    public Jersey findJerseyById(int id) throws Exception{
         Jersey j = jerseyRepo.findJerseyById(id);
         if (j == null){
-            throw new Exception("There is no jersey with ID" + id,error);
+            throw new Exception("There is no jersey with ID" + id);
         }
         return j;
     }
