@@ -32,17 +32,17 @@ public class Cart
   public Cart(int aTotalPrice, Customer aBuyer)
   {
     totalPrice = aTotalPrice;
-    if (aBuyer == null || aBuyer.getToBuy() != null)
+    if (aBuyer == null)
     {
       throw new RuntimeException("Unable to create Cart due to aBuyer. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     buyer = aBuyer;
   }
 
-  public Cart(int aId, int aTotalPrice, String aEmailForBuyer, String aPasswordForBuyer, String aShippingAddressForBuyer, Wishlist aWishlistForBuyer)
+  public Cart(int aId, int aTotalPrice, String aEmailForBuyer, String aPasswordForBuyer, String aShippingAddressForBuyer)
   {
     totalPrice = aTotalPrice;
-    buyer = new Customer(aEmailForBuyer, aPasswordForBuyer, aShippingAddressForBuyer, aWishlistForBuyer, this);
+    buyer = new Customer(aEmailForBuyer, aPasswordForBuyer, aShippingAddressForBuyer);
   }
 
   //------------------------
