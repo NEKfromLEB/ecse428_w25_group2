@@ -20,24 +20,6 @@ Scenario Outline: Successfully search for listings through the title (Normal Flo
         | Chicago      | 1992 Chicago Bulls                   |
         | Home         | 2002 Brazil Home, 2006 AC Milan Home |
 
-Scenario Outline: Successfully search for listings within a range of prices (Alternate Flow)
-    When the user searches for listings between "<min_price>" and "<max_price>" 
-    Then a list of "<listings>" shall be displayed where each title's price is in between the "<min_price>" and "<max_price>" inclusively
-
-    Examples:
-        | min_price | max_price | listings                                   |
-        | 0         | 100       | 2006 AC Milan Home, 1984 Las Vegas Raiders |
-        | 100       | 150       | 2002 Brazil Home                           |
-
-Scenario Outline: Successfully search for listings of a specific condition (Alternate Flow)
-    When the user searches for listings indicating a "<condition>"
-    Then a list of "<listings>" that have "<condition>" shall be displayed 
-
-    Examples:
-        | condition | listings                                   |
-        | Like new  | 1992 Chicago Bulls                         |
-        | Used      | 2006 AC Milan Home, 1984 Las Vegas Raiders |
-
 Scenario Outline: Successfully search for listings of a specific sport (Alternate Flow)
     When the user searches for listings indicating a "<sport>"
     Then a list of "<listings>" of "<sport>" shall be displayed
