@@ -13,12 +13,11 @@ public class Manager extends Staff
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  protected Manager(){
-  }
-
-  public Manager(int aId, String aEmail, String aPassword)
+  public Manager(){}
+  
+  public Manager(String aEmail, String aPassword)
   {
-    super(aId, aEmail, aPassword);
+    super(aEmail, aPassword);
   }
 
   //------------------------

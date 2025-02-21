@@ -7,106 +7,89 @@ import java.util.Objects;
 @Entity
 public class Offer {
 
-  public enum OfferState { Accepted, Pending, Rejected }
+    @EmbeddedId
+    private OfferKey key;
 
-  @EmbeddedId
-  private Key key;
+    @Enumerated(EnumType.STRING)
+    private OfferState offerState;
+    private int price;
 
-  private OfferState offerState;
-  private int price;
+    public Offer() {}
 
-  public Offer() {
-  }
+    public Offer(OfferKey key, OfferState offerState, int price) {
+        this.key = key;
+        this.offerState = offerState;
+        this.price = price;
+    }
 
-  public Offer(Key key, OfferState offerState, int price) {
-    this.key = key;
-    this.offerState = offerState;
-    this.price = price;
-  }
+    public OfferKey getKey() {
+        return key;
+    }
 
-  public Key getKey() {
-    return key;
-  }
+    public void setKey(OfferKey key) {
+        this.key = key;
+    }
 
-  public void setKey(Key key) {
-    this.key = key;
-  }
+    public OfferState getOfferState() {
+        return offerState;
+    }
 
-  public OfferState getOfferState() {
-    return offerState;
-  }
+    public void setOfferState(OfferState offerState) {
+        this.offerState = offerState;
+    }
 
-  public void setOfferState(OfferState offerState) {
-    this.offerState = offerState;
-  }
+    public int getPrice() {
+        return price;
+    }
 
-  public int getPrice() {
-    return price;
-  }
+    public void setPrice(int price) {
+        this.price = price;
+    }
 
-  public void setPrice(int price) {
-    this.price = price;
-  }
+    public enum OfferState { Accepted, Pending, Rejected }
 
-  public void delete() {
-    if (this.getKey() != null) {
-        Jersey jersey = this.getKey().getJersey();
-        if (jersey != null) {
-            jersey.removeOffer(this); 
+    @Embeddable
+    public static class OfferKey implements Serializable {
+        @ManyToOne
+        private Jersey jersey;
+
+        @ManyToOne
+        private Employee employee;
+
+        public OfferKey() {}
+
+        public OfferKey(Jersey jersey, Employee employee) {
+            this.jersey = jersey;
+            this.employee = employee;
         }
-        Employee employee = this.getKey().getEmployee();
-        if (employee != null) {
-            employee.removeOffer(this); 
+
+        public Jersey getJersey() {
+            return jersey;
+        }
+
+        public void setJersey(Jersey jersey) {
+            this.jersey = jersey;
+        }
+
+        public Employee getEmployee() {
+            return employee;
+        }
+
+        public void setEmployee(Employee employee) {
+            this.employee = employee;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (!(obj instanceof OfferKey)) return false;
+            OfferKey other = (OfferKey) obj;
+            return Objects.equals(jersey, other.jersey) && Objects.equals(employee, other.employee);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(jersey, employee);
         }
     }
-  } 
-
-
-  @Embeddable
-  public static class Key implements Serializable {
-    @ManyToOne
-    private Jersey jersey;
-    
-    @ManyToOne
-    private Employee employee;
-
-    public Key() {
-    }
-
-    public Key(Jersey jersey, Employee employee) {
-      this.jersey = jersey;
-      this.employee = employee;
-    }
-
-    public Jersey getJersey() {
-      return jersey;
-    }
-
-    public void setJersey(Jersey jersey) {
-      this.jersey = jersey;
-    }
-
-    public Employee getEmployee() {
-      return employee;
-    }
-
-    public void setEmployee(Employee employee) {
-      this.employee = employee;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-      if (!(obj instanceof Key)) {
-        return false;
-      }
-      Key other = (Key) obj;
-      return Objects.equals(this.jersey.getId(), other.jersey.getId()) &&
-             Objects.equals(this.employee.getId(), other.employee.getId());
-    }
-
-    @Override
-    public int hashCode() {
-      return Objects.hash(jersey.getId(), employee.getId());
-    }
-  }
 }
