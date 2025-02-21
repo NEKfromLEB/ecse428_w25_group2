@@ -3,17 +3,17 @@ As a user, I want to be able to search for specific jersey listings so that I ca
 
 Background:
     Given the following listings exist in the system
-        | id | title                     | price | condition     | sport      |
-        | 1  | 2002 Brazil Home          | 150   | Brand new     | soccer     |
-        | 2  | 2006 AC Milan Home        | 90    | Used          | soccer     |
-        | 3  | 1992 Chicago Bulls        | 200   | Like new      | basketball |
-        | 4  | 1984 Las Vegas Raiders    | 80    | Used          | football   |
+        | id | description               | sport      |
+        | 1  | 2002 Brazil Home          | soccer     |
+        | 2  | 2006 AC Milan Home        | soccer     |
+        | 3  | 1992 Chicago Bulls        | basketball |
+        | 4  | 1984 Las Vegas Raiders    | football   |
 
     And I am logged in as a user
 
-Scenario Outline: Successfully search for listings through the title (Normal Flow)
+Scenario Outline: Successfully search for listings through the description (Normal Flow)
     When the user searches for "<search_query>"
-    Then a list of "<listings>" shall be displayed where each listing's title contains the search query as a substring
+    Then a list of "<listings>" shall be displayed where each listing's description contains the search query as a substring
 
     Examples:
         | search_query | listings                             |
