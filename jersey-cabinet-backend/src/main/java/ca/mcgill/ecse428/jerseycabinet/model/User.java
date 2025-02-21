@@ -7,7 +7,6 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
-@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class User
 {
 
@@ -15,6 +14,7 @@ public abstract class User
   // MEMBER VARIABLES
   //------------------------
 
+  //User Attributes
   @Id
   @GeneratedValue
   private int id;
@@ -24,13 +24,10 @@ public abstract class User
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  public User(){}
 
-  protected User() {
-  }
-
-  public User(int aId, String aEmail, String aPassword)
+  public User(String aEmail, String aPassword)
   {
-    id = aId;
     email = aEmail;
     password = aPassword;
   }

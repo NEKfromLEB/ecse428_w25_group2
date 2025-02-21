@@ -1,7 +1,7 @@
 package ca.mcgill.ecse428.jerseycabinet.model;
 
-import java.util.*;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Customer extends User
@@ -11,18 +11,29 @@ public class Customer extends User
   // MEMBER VARIABLES
   //------------------------
 
+  //Customer Attributes
+  private String shippingAddress;
+
   //Customer Associations
-  private List<Jersey> ToSell;
+  @OneToOne
+  private Wishlist wishlist;
+  @OneToOne
   private Cart ToBuy;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  public Customer() {}
 
-  public Customer(int aId, String aEmail, String aPassword, Cart aToBuy)
+  public Customer(String aEmail, String aPassword, String aShippingAddress, Wishlist aWishlist, Cart aToBuy)
   {
-    super(aId, aEmail, aPassword);
-    ToSell = new ArrayList<Jersey>();
+    super(aEmail, aPassword);
+    shippingAddress = aShippingAddress;
+    if (aWishlist == null || aWishlist.getCustomer() != null)
+    {
+      throw new RuntimeException("Unable to create Customer due to aWishlist. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+    }
+    wishlist = aWishlist;
     if (aToBuy == null || aToBuy.getBuyer() != null)
     {
       throw new RuntimeException("Unable to create Customer due to aToBuy. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
@@ -30,130 +41,48 @@ public class Customer extends User
     ToBuy = aToBuy;
   }
 
-  public Customer(int aId, String aEmail, String aPassword, int aTotalPriceForToBuy)
+  public Customer(int aId, String aEmail, String aPassword, String aShippingAddress, String aKeywordsForWishlist, int aTotalPriceForToBuy)
   {
-    super(aId, aEmail, aPassword);
-    ToSell = new ArrayList<Jersey>();
+    super(aEmail, aPassword);
+    shippingAddress = aShippingAddress;
+    wishlist = new Wishlist(aKeywordsForWishlist, this);
     ToBuy = new Cart(aTotalPriceForToBuy, this);
   }
 
   //------------------------
   // INTERFACE
   //------------------------
-  /* Code from template association_GetMany */
-  public Jersey getToSell(int index)
+
+  public boolean setShippingAddress(String aShippingAddress)
   {
-    Jersey aToSell = ToSell.get(index);
-    return aToSell;
+    boolean wasSet = false;
+    shippingAddress = aShippingAddress;
+    wasSet = true;
+    return wasSet;
   }
 
-  public List<Jersey> getToSell()
+  public String getShippingAddress()
   {
-    List<Jersey> newToSell = Collections.unmodifiableList(ToSell);
-    return newToSell;
+    return shippingAddress;
   }
-
-  public int numberOfToSell()
+  /* Code from template association_GetOne */
+  public Wishlist getWishlist()
   {
-    int number = ToSell.size();
-    return number;
-  }
-
-  public boolean hasToSell()
-  {
-    boolean has = ToSell.size() > 0;
-    return has;
-  }
-
-  public int indexOfToSell(Jersey aToSell)
-  {
-    int index = ToSell.indexOf(aToSell);
-    return index;
+    return wishlist;
   }
   /* Code from template association_GetOne */
   public Cart getToBuy()
   {
     return ToBuy;
   }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfToSell()
-  {
-    return 0;
-  }
-  /* Code from template association_AddManyToOne */
-  public Jersey addToSell(Jersey.RequestState aRequestState, String aDescription, Employee aEmployee)
-  {
-    return new Jersey(aRequestState, aDescription, aEmployee, this);
-  }
-
-  public boolean addToSell(Jersey aToSell)
-  {
-    boolean wasAdded = false;
-    if (ToSell.contains(aToSell)) { return false; }
-    Customer existingSeller = aToSell.getSeller();
-    boolean isNewSeller = existingSeller != null && !this.equals(existingSeller);
-    if (isNewSeller)
-    {
-      aToSell.setSeller(this);
-    }
-    else
-    {
-      ToSell.add(aToSell);
-    }
-    wasAdded = true;
-    return wasAdded;
-  }
-
-  public boolean removeToSell(Jersey aToSell)
-  {
-    boolean wasRemoved = false;
-    //Unable to remove aToSell, as it must always have a seller
-    if (!this.equals(aToSell.getSeller()))
-    {
-      ToSell.remove(aToSell);
-      wasRemoved = true;
-    }
-    return wasRemoved;
-  }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addToSellAt(Jersey aToSell, int index)
-  {  
-    boolean wasAdded = false;
-    if(addToSell(aToSell))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfToSell()) { index = numberOfToSell() - 1; }
-      ToSell.remove(aToSell);
-      ToSell.add(index, aToSell);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveToSellAt(Jersey aToSell, int index)
-  {
-    boolean wasAdded = false;
-    if(ToSell.contains(aToSell))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfToSell()) { index = numberOfToSell() - 1; }
-      ToSell.remove(aToSell);
-      ToSell.add(index, aToSell);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addToSellAt(aToSell, index);
-    }
-    return wasAdded;
-  }
 
   public void delete()
   {
-    for(int i=ToSell.size(); i > 0; i--)
+    Wishlist existingWishlist = wishlist;
+    wishlist = null;
+    if (existingWishlist != null)
     {
-      Jersey aToSell = ToSell.get(i - 1);
-      aToSell.delete();
+      existingWishlist.delete();
     }
     Cart existingToBuy = ToBuy;
     ToBuy = null;
@@ -164,4 +93,12 @@ public class Customer extends User
     super.delete();
   }
 
+
+  public String toString()
+  {
+    return super.toString() + "["+
+            "shippingAddress" + ":" + getShippingAddress()+ "]" + System.getProperties().getProperty("line.separator") +
+            "  " + "wishlist = "+(getWishlist()!=null?Integer.toHexString(System.identityHashCode(getWishlist())):"null") + System.getProperties().getProperty("line.separator") +
+            "  " + "ToBuy = "+(getToBuy()!=null?Integer.toHexString(System.identityHashCode(getToBuy())):"null");
+  }
 }
