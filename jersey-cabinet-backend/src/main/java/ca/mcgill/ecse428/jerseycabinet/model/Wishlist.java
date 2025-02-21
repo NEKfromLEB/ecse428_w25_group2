@@ -30,17 +30,17 @@ public class Wishlist
   public Wishlist(String aKeywords, Customer aCustomer)
   {
     keywords = aKeywords;
-    if (aCustomer == null || aCustomer.getWishlist() != null)
+    if (aCustomer == null)
     {
       throw new RuntimeException("Unable to create Wishlist due to aCustomer. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
     customer = aCustomer;
   }
 
-  public Wishlist(String aKeywords, String aEmailForCustomer, String aPasswordForCustomer, String aShippingAddressForCustomer, Cart aToBuyForCustomer)
+  public Wishlist(String aKeywords, String aEmailForCustomer, String aPasswordForCustomer, String aShippingAddressForCustomer)
   {
     keywords = aKeywords;
-    customer = new Customer(aEmailForCustomer, aPasswordForCustomer, aShippingAddressForCustomer, this, aToBuyForCustomer);
+    customer = new Customer(aEmailForCustomer, aPasswordForCustomer, aShippingAddressForCustomer);
   }
 
   //------------------------
