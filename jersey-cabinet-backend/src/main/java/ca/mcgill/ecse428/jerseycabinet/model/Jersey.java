@@ -34,7 +34,7 @@ public class Jersey
   private String color;
   private String jerseyImage;
   private String proofOfAuthenticationImage;
-  private int salePrice;
+  private double salePrice;
 
   //Jersey Associations
   @ManyToOne
@@ -47,7 +47,7 @@ public class Jersey
   //------------------------
   public Jersey(){}
 
-  public Jersey(RequestState aRequestState, String aDescription, String aBrand, String aSport, String aColor, String aJerseyImage, String aProofOfAuthenticationImage, int aSalePrice, Employee aEmployee, Customer aSeller)
+  public Jersey(RequestState aRequestState, String aDescription, String aBrand, String aSport, String aColor, String aJerseyImage, String aProofOfAuthenticationImage, double aSalePrice, Employee aEmployee, Customer aSeller)
   {
     requestState = aRequestState;
     description = aDescription;
@@ -135,7 +135,7 @@ public class Jersey
     return wasSet;
   }
 
-  public boolean setSalePrice(int aSalePrice)
+  public boolean setSalePrice(double aSalePrice)
   {
     boolean wasSet = false;
     salePrice = aSalePrice;
@@ -183,7 +183,7 @@ public class Jersey
     return proofOfAuthenticationImage;
   }
 
-  public int getSalePrice()
+  public double getSalePrice()
   {
     return salePrice;
   }
