@@ -34,6 +34,7 @@ public class Jersey
   private String color;
   private String jerseyImage;
   private String proofOfAuthenticationImage;
+  private double salePrice;
 
   //Jersey Associations
   @ManyToOne
@@ -46,7 +47,7 @@ public class Jersey
   //------------------------
   public Jersey(){}
 
-  public Jersey(RequestState aRequestState, String aDescription, String aBrand, String aSport, String aColor, String aJerseyImage, String aProofOfAuthenticationImage, Employee aEmployee, Customer aSeller)
+  public Jersey(RequestState aRequestState, String aDescription, String aBrand, String aSport, String aColor, String aJerseyImage, String aProofOfAuthenticationImage, double aSalePrice, Employee aEmployee, Customer aSeller)
   {
     requestState = aRequestState;
     description = aDescription;
@@ -54,7 +55,9 @@ public class Jersey
     sport = aSport;
     color = aColor;
     jerseyImage = aJerseyImage;
+    salePrice = aSalePrice;
     proofOfAuthenticationImage = aProofOfAuthenticationImage;
+
     if (!setEmployee(aEmployee))
     {
       throw new RuntimeException("Unable to create Jersey due to aEmployee. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
@@ -133,6 +136,14 @@ public class Jersey
     return wasSet;
   }
 
+  public boolean setSalePrice(double aSalePrice)
+  {
+    boolean wasSet = false;
+    salePrice = aSalePrice;
+    wasSet = true;
+    return wasSet;
+  }
+
   public RequestState getRequestState()
   {
     return requestState;
@@ -171,6 +182,10 @@ public class Jersey
   public String getProofOfAuthenticationImage()
   {
     return proofOfAuthenticationImage;
+  }
+
+  public double getSalePrice(){
+    return salePrice;
   }
   /* Code from template association_GetOne */
   public Employee getEmployee()
