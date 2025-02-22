@@ -60,14 +60,18 @@ public class SearchJerseySteps {
     @Given("the following listings exist in the system")
     public void the_following_listings_exist_in_the_system(io.cucumber.datatable.DataTable dataTable) {
         employee = new Employee("emp@jerseycabinet.com", "pass123");
+        customer = new Customer("mamhmoud@gmai.com", "abc123", "");
 
-        jersey1 = new Jersey(RequestState.Listed, "2002 Brazil Home", "", "Soccer", "", "", "", null, null);
+        employeeRepo.save(employee);
+        customerRepo.save(customer);
 
-        jersey2 = new Jersey(RequestState.Listed, "2006 AC Milan Home", "", "Soccer", "", "", "", null, null);
+        jersey1 = new Jersey(RequestState.Listed, "2002 Brazil Home", "", "Soccer", "", "", "", employee, customer);
 
-        jersey3 = new Jersey(RequestState.Listed, "1992 Chicago Bulls", "", "Basketball", "", "", "", null, null);
+        jersey2 = new Jersey(RequestState.Listed, "2006 AC Milan Home", "", "Soccer", "", "", "", employee, customer);
 
-        jersey4 = new Jersey(RequestState.Listed, "1984 Las Vegas Raiders", "", "Football", "", "", "", null, null);
+        jersey3 = new Jersey(RequestState.Listed, "1992 Chicago Bulls", "", "Basketball", "", "", "", employee, customer);
+
+        jersey4 = new Jersey(RequestState.Listed, "1984 Las Vegas Raiders", "", "Football", "", "", "", employee, customer);
 
         jerseyRepo.save(jersey1);
         jerseyRepo.save(jersey2);
