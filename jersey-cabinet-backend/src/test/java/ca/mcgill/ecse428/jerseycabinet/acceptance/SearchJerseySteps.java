@@ -1,14 +1,12 @@
 package ca.mcgill.ecse428.jerseycabinet.acceptance;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 
 import ca.mcgill.ecse428.jerseycabinet.dao.CustomerRepository;
 import ca.mcgill.ecse428.jerseycabinet.dao.EmployeeRepository;
@@ -20,9 +18,9 @@ import ca.mcgill.ecse428.jerseycabinet.model.Jersey.RequestState;
 import ca.mcgill.ecse428.jerseycabinet.service.SearchJerseyService;
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
-import io.cucumber.java.en.Then;
 
 @CucumberContextConfiguration
 @SpringBootTest
@@ -65,13 +63,13 @@ public class SearchJerseySteps {
         employeeRepo.save(employee);
         customerRepo.save(customer);
 
-        jersey1 = new Jersey(RequestState.Listed, "2002 Brazil Home", "", "Soccer", "", "", "", employee, customer);
+        jersey1 = new Jersey(RequestState.Listed, "2002 Brazil Home", "", "soccer", "", "", "", 0, employee, customer);
 
-        jersey2 = new Jersey(RequestState.Listed, "2006 AC Milan Home", "", "Soccer", "", "", "", employee, customer);
+        jersey2 = new Jersey(RequestState.Listed, "2006 AC Milan Home", "", "soccer", "", "", "", 0, employee, customer);
 
-        jersey3 = new Jersey(RequestState.Listed, "1992 Chicago Bulls", "", "Basketball", "", "", "", employee, customer);
+        jersey3 = new Jersey(RequestState.Listed, "1992 Chicago Bulls", "", "basketball", "", "", "", 0, employee, customer);
 
-        jersey4 = new Jersey(RequestState.Listed, "1984 Las Vegas Raiders", "", "Football", "", "", "", employee, customer);
+        jersey4 = new Jersey(RequestState.Listed, "1984 Las Vegas Raiders", "", "football", "", "", "", 0, employee, customer);
 
         jerseyRepo.save(jersey1);
         jerseyRepo.save(jersey2);
