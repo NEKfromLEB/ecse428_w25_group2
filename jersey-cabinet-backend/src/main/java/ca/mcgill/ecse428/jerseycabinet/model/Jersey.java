@@ -34,7 +34,6 @@ public class Jersey
   private String color;
   private String jerseyImage;
   private String proofOfAuthenticationImage;
-  private boolean listedFoSale;
   private int salePrice;
 
   //Jersey Associations
@@ -48,7 +47,7 @@ public class Jersey
   //------------------------
   public Jersey(){}
 
-  public Jersey(RequestState aRequestState, String aDescription, String aBrand, String aSport, String aColor, String aJerseyImage, String aProofOfAuthenticationImage, boolean aListedFoSale, int aSalePrice, Employee aEmployee, Customer aSeller)
+  public Jersey(RequestState aRequestState, String aDescription, String aBrand, String aSport, String aColor, String aJerseyImage, String aProofOfAuthenticationImage, int aSalePrice, Employee aEmployee, Customer aSeller)
   {
     requestState = aRequestState;
     description = aDescription;
@@ -57,7 +56,6 @@ public class Jersey
     color = aColor;
     jerseyImage = aJerseyImage;
     proofOfAuthenticationImage = aProofOfAuthenticationImage;
-    listedFoSale = aListedFoSale;
     salePrice = aSalePrice;
     if (!setEmployee(aEmployee))
     {
@@ -137,13 +135,6 @@ public class Jersey
     return wasSet;
   }
 
-  public boolean setListedFoSale(boolean aListedFoSale)
-  {
-    boolean wasSet = false;
-    listedFoSale = aListedFoSale;
-    wasSet = true;
-    return wasSet;
-  }
   public boolean setSalePrice(int aSalePrice)
   {
     boolean wasSet = false;
@@ -192,10 +183,6 @@ public class Jersey
     return proofOfAuthenticationImage;
   }
 
-  public boolean getListedFoSale()
-  {
-    return listedFoSale;
-  }
   public int getSalePrice()
   {
     return salePrice;
@@ -258,10 +245,7 @@ public class Jersey
             "jerseyImage" + ":" + getJerseyImage()+ "," +
             "jerseyImage" + ":" + getJerseyImage()+ "," +
             "proofOfAuthenticationImage" + ":" + getProofOfAuthenticationImage()+ "," +
-            "listedFoSale" + ":" + getListedFoSale()+ "," +
-            "proofOfAuthenticationImage" + ":" + getProofOfAuthenticationImage()+ "]" + System.getProperties().getProperty("line.separator") +
             "salePrice" + ":" + getSalePrice()+ "]" + System.getProperties().getProperty("line.separator") +
-            "  " + "requestState" + "=" + (getRequestState() != null ? !getRequestState().equals(this)  ? getRequestState().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "requestState" + "=" + (getRequestState() != null ? !getRequestState().equals(this)  ? getRequestState().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
             "  " + "employee = "+(getEmployee()!=null?Integer.toHexString(System.identityHashCode(getEmployee())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "employee = "+(getEmployee()!=null?Integer.toHexString(System.identityHashCode(getEmployee())):"null") + System.getProperties().getProperty("line.separator") +
