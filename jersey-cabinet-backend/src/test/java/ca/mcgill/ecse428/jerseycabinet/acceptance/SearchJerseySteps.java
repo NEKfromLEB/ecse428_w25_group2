@@ -1,10 +1,12 @@
 package ca.mcgill.ecse428.jerseycabinet.acceptance;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -84,16 +86,27 @@ public class SearchJerseySteps {
 
     @When("the user searches for {string}")
     public void the_user_searches_for(String searchQuery) {
-        searchResults = searchJerseyService.findAllListedJerseys().stream()
-            .filter(jersey -> jersey.getDescription().toLowerCase().contains(searchQuery.toLowerCase()))
-            .collect(Collectors.toList());
+        List<Jersey> allJerseys = searchJerseyService.findAllListedJerseys();
+        List<Jersey> matchingJerseys = new ArrayList<>();
+
+        for (Jersey jersey : allJerseys) {
+            if (jersey.getDescription().toLowerCase().contains(searchQuery.toLowerCase())) {
+                matchingJerseys.add(jersey);
+            }
+        }
+
+        searchResults = matchingJerseys;
     }
 
     @Then("a list of {string} shall be displayed where each listing's description contains the search query as a substring")
     public void a_list_of_shall_be_displayed_where_each_listing_s_description_contains_the_search_query_as_a_substring(String expectedListings) {
-        List<String> expectedDescriptions = List.of(expectedListings.split(", "));
-        List<String> actualDescriptions = searchResults.stream().map(Jersey::getDescription).collect(Collectors.toList());
-        
+        List<String> expectedDescriptions = Arrays.asList(expectedListings.split(", "));
+        List<String> actualDescriptions = new ArrayList<>();
+    
+        for (Jersey jersey : searchResults) {
+            actualDescriptions.add(jersey.getDescription());
+        }
+    
         assertEquals(expectedDescriptions, actualDescriptions);
     }
 
@@ -104,8 +117,12 @@ public class SearchJerseySteps {
 
     @Then("a list of {string} of {string} shall be displayed")
     public void a_list_of_of_shall_be_displayed(String expectedListings, String sport) {
-        List<String> expectedDescriptions = List.of(expectedListings.split(", "));
-        List<String> actualDescriptions = searchResults.stream().map(Jersey::getDescription).collect(Collectors.toList());
+        List<String> expectedDescriptions = Arrays.asList(expectedListings.split(", "));
+        List<String> actualDescriptions = new ArrayList<>();
+
+        for (Jersey jersey : searchResults) {
+            actualDescriptions.add(jersey.getDescription());
+        }
 
         assertEquals(expectedDescriptions, actualDescriptions);
     }
@@ -113,7 +130,12 @@ public class SearchJerseySteps {
     @Given("no listings match {string}")
     public void no_listings_match(String searchQuery) {
         List<Jersey> allJerseys = searchJerseyService.findAllListedJerseys();
-        assertTrue(allJerseys.stream().noneMatch(jersey -> jersey.getDescription().toLowerCase().contains(searchQuery.toLowerCase())));
+    
+        for (Jersey jersey : allJerseys) {
+            if (jersey.getDescription().toLowerCase().contains(searchQuery.toLowerCase())) {
+                fail("A listing matches the search query, but it should not.");
+            }
+        }
     }
 
     @Then("{string} is empty")
