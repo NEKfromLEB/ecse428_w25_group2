@@ -11,18 +11,18 @@ Background:
     And I am logged in as an Employee
     And I am viewing the list of pending requests
 
-Scenario Outline: Confirm the authenticity request. (Normal flow)
+Scenario: Confirm the authenticity request. (Normal flow)
     When I confirm the authencity of the jersey 
     Then the jersey is marked as unlisted
     And the jersey is assigned to me. 
 
 
-Scenario Outline: Reject the authenticity request. (Normal flow)
+Scenario: Reject the authenticity request. (Normal flow)
     When I reject the authencity of the jersey 
     Then the jersey is marked as rejected
     And the jersey is assigned to me. 
 
-Scenario Outline: I do not make a decision. (Error flow)
+Scenario: I do not make a decision. (Error flow)
     When I view a request but do not make a decision 
     Then the jersey status remains unchanged
     And the jersey remains in the list of requests to be reviewed.
