@@ -6,20 +6,20 @@ so that I can confirm or descredit the authenticity of a jersey.
 
 Background:
     Given the following authentication request exists in the system
-        | requestState| description       | brand | sport      | color | jerseyImage | proofOfAuthenticationImage | Employee | Customer
-        | null       | This is a jersey. | Nike  | soccer     | black | null        | null                       | null     | "tee@gmail.com"
+        | requestState| description       | brand | sport      | color | jerseyImage | proofOfAuthenticationImage  | Customer
+        | null        | This is a jersey. | Nike  | soccer     | black | null        | null                        | "tee@gmail.com"
     And I am logged in as an Employee
     And I am viewing the list of pending requests
 
 Scenario Outline: Confirm the authenticity request. (Normal flow)
     When I confirm the authencity of the jersey 
-    And the jersey is marked as unlisted
+    Then the jersey is marked as unlisted
     And the jersey is assigned to me. 
 
 
 Scenario Outline: Reject the authenticity request. (Normal flow)
     When I reject the authencity of the jersey 
-    And the jersey is marked as rejected
+    Then the jersey is marked as rejected
     And the jersey is assigned to me. 
 
 Scenario Outline: I do not make a decision. (Error flow)

@@ -91,7 +91,7 @@ public class AuthenticationStepDefinitions {
         assertEquals(employee.getId(),jersey.getEmployee().getId());
     }
 
-    @And("I reject the authencity of the jersey")
+    @When("I reject the authencity of the jersey")
         public void i_reject_the_authencity_of_the_jersey() throws Exception{
             authenService.findJerseyById(this.id);
             authenService.rejectRequestById(this.id,this.employee);
