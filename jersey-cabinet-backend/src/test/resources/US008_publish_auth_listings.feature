@@ -8,7 +8,7 @@ Feature: Listing a Jersey for Sale
 
   Scenario Outline: Successfully listing a jersey for sale (Normal Flow)
     When I navigate to the "Sell Jersey" page
-    And I provide the required details including brand, size, condition, and price
+    And I provide the required details including "<brand>", "<size>", "<condition>", and <price>
     And I upload a clear image of the jersey
     And I click on the "List Jersey" button
     Then my jersey should be successfully listed for sale

@@ -225,15 +225,24 @@ public class Jersey
 
   public String toString()
   {
+  
     return super.toString() + "["+
             "description" + ":" + getDescription()+ "," +
+            "description" + ":" + getDescription()+ "," +
+            "id" + ":" + getId()+ "," +
             "id" + ":" + getId()+ "," +
             "brand" + ":" + getBrand()+ "," +
+            "brand" + ":" + getBrand()+ "," +
+            "sport" + ":" + getSport()+ "," +
             "sport" + ":" + getSport()+ "," +
             "color" + ":" + getColor()+ "," +
+            "color" + ":" + getColor()+ "," +
             "jerseyImage" + ":" + getJerseyImage()+ "," +
-            "proofOfAuthenticationImage" + ":" + getProofOfAuthenticationImage()+ "]" + System.getProperties().getProperty("line.separator") +
+            "jerseyImage" + ":" + getJerseyImage()+ "," +
+            "proofOfAuthenticationImage" + ":" + getProofOfAuthenticationImage()+ "," +
+            "salePrice" + ":" + getSalePrice()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "requestState" + "=" + (getRequestState() != null ? !getRequestState().equals(this)  ? getRequestState().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "employee = "+(getEmployee()!=null?Integer.toHexString(System.identityHashCode(getEmployee())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "employee = "+(getEmployee()!=null?Integer.toHexString(System.identityHashCode(getEmployee())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "seller = "+(getSeller()!=null?Integer.toHexString(System.identityHashCode(getSeller())):"null");
   }
