@@ -181,8 +181,6 @@ public class Jersey
 
   public double getSalePrice(){
     return salePrice;
-  }
-  /* Code from template association_GetOne */
   public Employee getEmployee()
   {
     return employee;
