@@ -1,4 +1,4 @@
-package ca.mcgill.ecse428.jerseycabinet.acceptance;
+package ca.mcgill.ecse428.jerseycabinet.acceptance.US007;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,10 +63,10 @@ public class FilteringJerseySteps {
         customerRepo.save(customer);
         
         // For simplicity, we use hardcoded data based on the filtering feature:
-        jersey1 = new Jersey(RequestState.Listed, "2002 Brazil Home", "", "soccer", "", "", "", 0, employee, customer);
-        jersey2 = new Jersey(RequestState.Listed, "2006 AC Milan Home", "", "soccer", "", "", "", 0, employee, customer);
-        jersey3 = new Jersey(RequestState.Listed, "1992 Chicago Bulls", "", "basketball", "", "", "", 0, employee, customer);
-        jersey4 = new Jersey(RequestState.Listed, "1984 Las Vegas Raiders", "", "football", "", "", "", 0, employee, customer);
+        jersey1 = new Jersey(RequestState.Listed, "2002 Brazil Home", "", "soccer", "", "", "", 0, customer);
+        jersey2 = new Jersey(RequestState.Listed, "2006 AC Milan Home", "", "soccer", "", "", "", 0, customer);
+        jersey3 = new Jersey(RequestState.Listed, "1992 Chicago Bulls", "", "basketball", "", "", "", 0, customer);
+        jersey4 = new Jersey(RequestState.Listed, "1984 Las Vegas Raiders", "", "football", "", "", "", 0, customer);
         
         jerseyRepo.save(jersey1);
         jerseyRepo.save(jersey2);
