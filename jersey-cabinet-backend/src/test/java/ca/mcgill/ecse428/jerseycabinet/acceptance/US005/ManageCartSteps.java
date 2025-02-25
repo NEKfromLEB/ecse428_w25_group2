@@ -1,4 +1,4 @@
-package ca.mcgill.ecse428.jerseycabinet.acceptance;
+package ca.mcgill.ecse428.jerseycabinet.acceptance.US005;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -78,7 +78,6 @@ public class ManageCartSteps {
               "",
               "",
               price,
-              employee,
               customer);
       jerseyRepository.save(jersey);
       jerseyList.add(jersey);

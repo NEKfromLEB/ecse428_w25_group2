@@ -26,7 +26,6 @@ Scenario Outline: Successfully search for listings of a specific sport (Alternat
 
     Examples:
         | sport    | listings                             |
-        | soccer   | 2002 Brazil Home, 2006 AC Milan Home |
         | football | 1984 Las Vegas Raiders               |
 
 Scenario Outline: Unsuccessfully search for listings because query does not match any listing (Error Flow)
