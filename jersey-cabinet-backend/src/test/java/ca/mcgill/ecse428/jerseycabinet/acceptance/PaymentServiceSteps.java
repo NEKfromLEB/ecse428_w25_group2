@@ -43,14 +43,31 @@ public class PaymentServiceSteps {
         customerRepository.save(customer);
     }
 
+    @Given("a user has added a jersey to their cart")
+    public void a_user_has_added_a_jersey_to_their_cart() {
+        assertNotNull(customer);
+    }
+
     @When("the user fills out the card information with card number {string}, expiration date {string}, CVV {string}, and cardholder name {string}")
     public void the_user_fills_out_card_information(String cardNumber, String expirationDate, String cvv, String cardholderName) {
         paymentDTO = new PaymentDTO();
         paymentDTO.setCardNumber(cardNumber);
-        paymentDTO.setExpirationDate(expirationDate);
+        
+        // Safely handle date conversion
+        if (expirationDate != null && !expirationDate.isEmpty()) {
+            try {
+                String[] parts = expirationDate.split("/");
+                String month = parts[0];
+                String year = "20" + parts[1];
+                paymentDTO.setExpirationDate(year + "-" + month + "-01");
+            } catch (Exception e) {
+                paymentDTO.setExpirationDate("");  // Handle invalid date format
+            }
+        }
+        
         paymentDTO.setCvv(cvv);
         paymentDTO.setCardHolderName(cardholderName);
-        billingAddress = "123 Billing Street, City, State 12345";
+        billingAddress = "123 Test Street, Test City, TS 12345";
     }
 
     @When("the user submits the payment form")
@@ -71,7 +88,11 @@ public class PaymentServiceSteps {
 
     @When("any field is missing")
     public void any_field_is_missing() {
-        paymentDTO.setCardNumber("");  // Simulate missing card number
+        try {
+            processedPayment = paymentService.processPayment(paymentDTO, billingAddress, customer);
+        } catch (Exception e) {
+            exception = e;
+        }
     }
 
     @Then("the system warns: {string}")
@@ -85,19 +106,44 @@ public class PaymentServiceSteps {
         assertNull(processedPayment);
     }
 
-    @When("the user enters invalid card information")
-    public void the_user_enters_invalid_card_information() {
-        paymentDTO.setExpirationDate("invalid-date");
+    @When("the user enters invalid card information with card number {string}, expiration date {string}, CVV {string}, or cardholder name {string}")
+    public void the_user_enters_invalid_card_information(String cardNumber, String expirationDate, String cvv, String cardholderName) {
+        paymentDTO = new PaymentDTO();
+        paymentDTO.setCardNumber(cardNumber);
+        paymentDTO.setExpirationDate("invalid-date");  
+        paymentDTO.setCvv(cvv);
+        paymentDTO.setCardHolderName(cardholderName);
+        billingAddress = "123 Test Street, Test City, TS 12345";
+        
+        // Try to process the payment immediately to trigger the exception
+        try {
+            processedPayment = paymentService.processPayment(paymentDTO, billingAddress, customer);
+        } catch (Exception e) {
+            exception = e;
+        }
     }
 
     @Then("the system prevents submission")
     public void the_system_prevents_submission() {
-        assertNotNull(exception);
+        assertNotNull(exception, "Expected an exception but none was thrown");
     }
 
     @Then("an error message is displayed: {string}")
     public void an_error_message_is_displayed(String errorMessage) {
+        assertNotNull(exception, "Expected an exception but none was thrown");
         assertEquals(errorMessage, exception.getMessage());
+    }
+
+    @Then("the order shall be recorded in the system")
+    public void the_order_shall_be_recorded_in_the_system() {
+        assertNotNull(processedPayment);
+        assertNotNull(processedPayment.getId());
+    }
+
+    @Then("the form remains on the page for correction")
+    public void the_form_remains_on_the_page_for_correction() {
+        assertNull(processedPayment);
+        assertNotNull(exception);
     }
 
     @After

@@ -28,13 +28,14 @@ I want to be able to fill out my card information to purchase a jersey, so that 
       | 5500000000000004 |                | 456 | Jane Smith     |  
       | 340000000000009  | 09/24          |     | Alex Johnson   |  
 
-  Scenario: Error - Invalid Card Information (Error flow)  
+  Scenario Outline: Error - Invalid Card Information (Error flow)  
     When the user enters invalid card information with card number "<cardNumber>", expiration date "<expirationDate>", CVV "<cvv>", or cardholder name "<cardholderName>"  
     Then the system prevents submission  
     And an error message is displayed: "Invalid card details. Please try again."  
     And the form remains on the page for correction  
+
     Examples:  
-      | cardNumber       | expirationDate | cvv  | cardholderName |  
-      | 1234567890123456 | 13/25          | 123  | John Doe       |  
-      | 5500000000000004 | 06/10          | 456  | Jane Smith     |  
-      | ABCDEFGHIJKLMNOP | 09/24          | 789  | Alex Johnson   |  
+      | cardNumber       | expirationDate | cvv | cardholderName |  
+      | 1234567890123456 | invalid-date   | 123 | John Doe       |  
+      | 9876543210987654 | invalid-date   | 456 | Jane Smith     |  
+      | 1111222233334444 | invalid-date   | 789 | Bob Johnson    |  

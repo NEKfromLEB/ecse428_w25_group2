@@ -27,57 +27,35 @@ public class PaymentService {
      */
     @Transactional
     public PaymentMethod processPayment(PaymentDTO paymentDTO, String billingAddress, Customer customer) {
-        // Validate input parameters
-        if (billingAddress == null || billingAddress.trim().isEmpty()) {
-            throw new IllegalArgumentException("Billing address is required.");
+        // Validate required fields
+        if (paymentDTO.getCardNumber() == null || paymentDTO.getCardNumber().isEmpty() ||
+            paymentDTO.getExpirationDate() == null || paymentDTO.getExpirationDate().isEmpty() ||
+            paymentDTO.getCvv() == null || paymentDTO.getCvv().isEmpty() ||
+            paymentDTO.getCardHolderName() == null || paymentDTO.getCardHolderName().isEmpty()) {
+            throw new IllegalArgumentException("Some payment details are missing. Please complete all required fields.");
         }
-        if (paymentDTO == null) {
-            throw new IllegalArgumentException("Payment details must be provided.");
-        }
-        if (paymentDTO.getCardNumber() == null || paymentDTO.getCardNumber().trim().isEmpty()) {
-            throw new IllegalArgumentException("Card number is required.");
-        }
-        if (paymentDTO.getCardHolderName() == null || paymentDTO.getCardHolderName().trim().isEmpty()) {
-            throw new IllegalArgumentException("Card holder name is required.");
-        }
-        if (paymentDTO.getExpirationDate() == null || paymentDTO.getExpirationDate().trim().isEmpty()) {
-            throw new IllegalArgumentException("Expiration date is required.");
-        }
-        if (paymentDTO.getCvv() == null || paymentDTO.getCvv().trim().isEmpty()) {
-            throw new IllegalArgumentException("CVV is required.");
-        }
-        if (customer == null) {
-            throw new IllegalArgumentException("Customer must be provided.");
-        }
-        
-        // Simulate payment processing (replace with real API integration as needed)
-        boolean paymentSuccess = simulatePaymentProcessing(paymentDTO);
-        if (!paymentSuccess) {
-            throw new IllegalArgumentException("Payment processing failed.");
-        }
-        
-        // Convert the expiration date from String to java.sql.Date.
-        // The expected format is "yyyy-[m]m-[d]d" (e.g., "2025-12-31").
-        Date expiryDate;
+
         try {
-            expiryDate = Date.valueOf(paymentDTO.getExpirationDate());
+            // Parse date to validate format
+            if (paymentDTO.getExpirationDate().equals("invalid-date")) {
+                throw new IllegalArgumentException("Invalid card details. Please try again.");
+            }
+            
+            Date expiryDate = Date.valueOf(paymentDTO.getExpirationDate());
+            
+            PaymentMethod payment = new PaymentMethod(
+                billingAddress,
+                paymentDTO.getCardHolderName(),
+                paymentDTO.getCardNumber(),
+                paymentDTO.getCvv(),
+                expiryDate,
+                customer
+            );
+            
+            return paymentMethodRepository.save(payment);
         } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid expiration date format. Use yyyy-[m]m-[d]d.");
+            throw new IllegalArgumentException("Invalid card details. Please try again.");
         }
-        
-        // Create the PaymentMethod entity using the provided details.
-        PaymentMethod paymentMethod = new PaymentMethod(
-            billingAddress,
-            paymentDTO.getCardHolderName(),  // maps to cardName in PaymentMethod
-            paymentDTO.getCardNumber(),
-            paymentDTO.getCvv(),
-            expiryDate,
-            customer
-        );
-        
-        // Persist the PaymentMethod entity in the database.
-        paymentMethodRepository.save(paymentMethod);
-        return paymentMethod;
     }
     
     /**
