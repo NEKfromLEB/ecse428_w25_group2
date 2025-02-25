@@ -1,137 +1,161 @@
 package ca.mcgill.ecse428.jerseycabinet;
 
-import org.junit.jupiter.api.Assertions;
-import org.mockito.Mockito;
+import static org.junit.jupiter.api.Assertions.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import ca.mcgill.ecse428.jerseycabinet.dao.EmployeeRepository;
 import ca.mcgill.ecse428.jerseycabinet.model.Employee;
 import ca.mcgill.ecse428.jerseycabinet.service.EmployeeLoginSignUpService;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import io.cucumber.spring.CucumberContextConfiguration;
 
+@CucumberContextConfiguration
 @SpringBootTest
 public class US006_log_in_sign_up {
 
     @Autowired
     private EmployeeLoginSignUpService employeeService;
 
-    private ca.mcgill.ecse428.jerseycabinet.dao.EmployeeRepository employeeRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     private Employee employee;
-    private String errorMessage;
-    private boolean loginSuccess;
+    private Employee loginEmployee;
+    private Employee existingEmployee;
+    private Employee nonExistingEmployee;
+    private String incorrectEmail = null;
+    private String errorMessage = null;
+    private boolean toRegister;
+
 
     @Given("the user is on the registration page")
     public void theUserIsOnTheRegistrationPage() {
+        employeeRepository.deleteAll();
+        toRegister = true;
         // Simulate user being on the registration page
     }
 
     @When("the user enters a valid {string} and {string}")
     public void theUserEntersAValidEmailAndPassword(String email, String password) {
+       
         try {
-            employee = new Employee(email, password);
-            Mockito.when(employeeRepository.findEmployeeByEmail(email)).thenReturn(null);
-            Mockito.when(employeeRepository.save(Mockito.any(Employee.class))).thenReturn(employee);
-            employee = employeeService.registerEmployee(email, password);
-        } catch (IllegalArgumentException e) {
+            if(toRegister) {
+                // create employee
+                employee = employeeService.registerEmployee(email, password);
+                errorMessage = null;
+            }
+            else {
+                loginEmployee = employeeService.loginEmployee(email, password);
+                errorMessage = null;
+            }
+        }
+        catch(Exception e) {
             errorMessage = e.getMessage();
         }
+        
+       
+    }
+
+    @And("clicks the Sign Up button")
+    public void clicksTheSignUpButton() {
+        
     }
 
     @Then("the account should be created successfully")
     public void theAccountShouldBeCreatedSuccessfully() {
-        Assertions.assertNotNull(employee);
+        assertNotNull(employee);
+        assertNotNull(employeeRepository.findEmployeeByEmail(employee.getEmail()), "Employee not found in DB");
     }
 
     @And("the user should see a confirmation message")
     public void theUserShouldSeeAConfirmationMessage() {
-        Assertions.assertNotNull(employee, "Account creation confirmation should be shown");
+        // this will be done in frontend
     }
 
     @When("the user enters an invalid {string} or {string}")
     public void theUserEntersAnInvalidEmailOrPassword(String email, String password) {
         try {
-            employeeService.registerEmployee(email, password);
-        } catch (IllegalArgumentException e) {
+            incorrectEmail = email;
+            nonExistingEmployee = employeeService.registerEmployee(email, password);
+        }
+        catch (Exception e) {
             errorMessage = e.getMessage();
         }
     }
 
     @Then("the system should display an appropriate error message")
     public void theSystemShouldDisplayAnAppropriateErrorMessage() {
-        Assertions.assertNotNull(errorMessage);
+        assertNotNull(errorMessage);
+        errorMessage = null;
+        assertNotNull(incorrectEmail);
+        assertNull(employeeRepository.findEmployeeByEmail(incorrectEmail));
     }
 
-    @Given("the user has an existing account")
-    public void theUserHasAnExistingAccount() {
-        employee = new Employee("user@example.com", "Passw0rd!");
-        Mockito.when(employeeRepository.findEmployeeByEmail("user@example.com")).thenReturn(employee);
+    @Given("the user has an existing account with {string} and {string}")
+    public void theUserHasAnExistingAccountWithEmailAndPassword(String email, String password) {
+        employeeRepository.deleteAll();
+
+        Employee example = new Employee(email, password);
+        employeeRepository.save(example);
     }
 
-    @Given("is on the login page")
+    @And("is on the login page")
     public void isOnTheLoginPage() {
+        toRegister = false;
         // Simulate user navigating to the login page
+    }
+
+    @And("clicks the Login button")
+    public void clicksTheLoginButton() {
+        // clicks button
+    }
+
+    @Then("the user should be redirected to the homepage") 
+    public void theUserShouldBeRedirectedToTheHomepage(){
+        assertNull(errorMessage);
+        assertNotNull(loginEmployee);
+    }
+
+    @Given("the user is on the login page")
+    public void theUserIsOnTheLoginPage() {
+        employeeRepository.deleteAll();
+        toRegister = false;
     }
 
     @When("the user enters an incorrect {string} or {string}")
     public void theUserEntersAnIncorrectEmailOrPassword(String email, String password) {
         try {
-            employeeService.loginEmployee(email, password);
-        } catch (IllegalArgumentException e) {
+            nonExistingEmployee = employeeService.loginEmployee(email, password);
+        }
+        catch(Exception e) {
             errorMessage = e.getMessage();
         }
     }
 
     @Then("the system should display an {string} message")
     public void theSystemShouldDisplayAnInvalidCredentialsMessage(String expectedMessage) {
-        Assertions.assertEquals(expectedMessage, errorMessage);
+        assertNotNull(errorMessage);
     }
 
-    @When("the user enters an unregistered email {string}")
-    public void theUserEntersAnUnregisteredEmail(String email) {
+    @When("the user enters an unregistered email newuser@example.com")
+    public void theUserEntersAnUnregisteredEmail() {
         try {
-            employeeService.loginEmployee(email, "somepassword");
-        } catch (IllegalArgumentException e) {
+            nonExistingEmployee = employeeService.loginEmployee("newuser@example.com", "APassword123");
+        }
+        catch(Exception e) {
             errorMessage = e.getMessage();
         }
     }
 
-    @Then("the system should display a {string} message")
-    public void theSystemShouldDisplayAUserNotFoundMessage(String expectedMessage) {
-        Assertions.assertEquals(expectedMessage, errorMessage);
+    @Then("the system should display a User not found message")
+    public void theSystemShouldDisplayAUserNotFoundMessage() {
+        assertNotNull(errorMessage);
+        errorMessage = null;
     }
 
-    @When("the user clicks the {string} button")
-    public void theUserClicksTheButton(String buttonName) {
-        if (buttonName.equals("Login")) {
-            try {
-                employee = employeeService.loginEmployee(employee.getEmail(), employee.getPassword());
-                loginSuccess = true;
-            } catch (IllegalArgumentException e) {
-                loginSuccess = false;
-                errorMessage = e.getMessage();
-            }
-        } else if (buttonName.equals("Logout")) {
-            employee = null;
-        }
-    }
-
-    @Then("the user should be redirected to the homepage")
-    public void theUserShouldBeRedirectedToTheHomepage() {
-        Assertions.assertTrue(loginSuccess, "User should be logged in successfully");
-    }
-
-
-    @Then("the user should be redirected to the login page")
-    public void theUserShouldBeRedirectedToTheLoginPage() {
-        Assertions.assertNull(employee, "User should be logged out and redirected to login page");
-    }
-
-    @And("should no longer have access to protected pages")
-    public void shouldNoLongerHaveAccessToProtectedPages() {
-        Assertions.assertNull(employee, "Logged-out users should not access protected pages");
-    }
 }

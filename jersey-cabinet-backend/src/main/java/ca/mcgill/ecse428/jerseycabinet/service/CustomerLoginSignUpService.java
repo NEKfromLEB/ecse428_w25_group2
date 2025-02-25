@@ -13,16 +13,33 @@ public class CustomerLoginSignUpService {
     private CustomerRepository customerRepository;
 
     public Customer registerCustomer(String email, String password, String shippingAddress) {
-        if (!customerRepository.findCustomerByEmail(email).equals(null)) {
+        if (customerRepository.findCustomerByEmail(email) != null) {
             throw new IllegalArgumentException("Email already in use.");
         }
 
-        if(password.equals(null) || password.length() < 7) {
+        if(password == null || password.length() < 7) {
             throw new IllegalArgumentException("Password must be at least 7 characters long");
         }
 
-        if(shippingAddress.equals(null) || shippingAddress.length() == 0) {
+        if(shippingAddress == null || shippingAddress.length() == 0) {
             throw new IllegalArgumentException("shipping address must be valid");
+        }
+
+        int i = email.indexOf("@");
+        if (i == -1 || i == 0 || i == email.length() - 1) {
+            throw new IllegalArgumentException("email must contain an @");
+        }
+
+        if(!(email.chars().filter(ch -> ch == '@').count() == 1)) {
+            throw new IllegalArgumentException("email must contain only 1 @");
+        }
+        i = email.indexOf(".com");
+        if (i <= 0 || i != email.length() - 4) {
+            throw new IllegalArgumentException("email must contain .com at the end");
+        }
+
+        if(!email.strip().equals(email)) {
+            throw new IllegalArgumentException("Email must not contain spaces");
         }
 
         Customer newCustomer = new Customer(email, password, shippingAddress);
@@ -32,7 +49,7 @@ public class CustomerLoginSignUpService {
 
     public Customer loginCustomer(String email, String password) {
         Customer customer = customerRepository.findCustomerByEmail(email);
-        if (customer.equals(null) || !customer.getPassword().equals(password)) {
+        if (customer == null || !customer.getPassword().equals(password)) {
             throw new IllegalArgumentException("Invalid email or password.");
         }
         return customer;
@@ -41,7 +58,7 @@ public class CustomerLoginSignUpService {
     public Customer getCustomerById(int id) {
         Customer customer = customerRepository.findCustomerById(id);
 
-        if(customer.equals(null)) throw new IllegalArgumentException("Id Does not Exist!");
+        if(customer == null) throw new IllegalArgumentException("Id Does not Exist!");
 
         return customer;
     }
