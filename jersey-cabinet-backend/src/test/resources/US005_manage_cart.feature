@@ -40,7 +40,7 @@ Feature: Manage the cart
   Scenario: Attempt to add an out-of-stock item
     Given an item "2016 Golden State Warriors" is marked out of stock
     When I add "2016 Golden State Warriors" to my cart
-    Then I should see an error message "Item is out of stock"
+    Then I should see an error message "Item is not for sale"
     And the cart should remain unchanged
 
   Scenario: Attempt to add an item while not logged in
