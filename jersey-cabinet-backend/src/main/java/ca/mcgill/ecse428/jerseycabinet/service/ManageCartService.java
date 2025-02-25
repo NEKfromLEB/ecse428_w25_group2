@@ -2,8 +2,11 @@ package ca.mcgill.ecse428.jerseycabinet.service;
 
 import ca.mcgill.ecse428.jerseycabinet.dao.CartItemRepository;
 import ca.mcgill.ecse428.jerseycabinet.dao.CartRepository;
+import ca.mcgill.ecse428.jerseycabinet.dao.CustomerRepository;
+import ca.mcgill.ecse428.jerseycabinet.dao.JerseyRepository;
 import ca.mcgill.ecse428.jerseycabinet.model.Cart;
 import ca.mcgill.ecse428.jerseycabinet.model.CartItem;
+import ca.mcgill.ecse428.jerseycabinet.model.Customer;
 import ca.mcgill.ecse428.jerseycabinet.model.Jersey;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -17,6 +20,8 @@ public class ManageCartService {
 
   @Autowired private CartRepository cartRepository;
   @Autowired private CartItemRepository cartItemRepository;
+  @Autowired private JerseyRepository jerseyRepository;
+  @Autowired private CustomerRepository customerRepository;
 
   // Find methods
 
@@ -51,6 +56,14 @@ public class ManageCartService {
    */
   @Transactional
   public Cart findCartByCustomerID(int customer_id) {
+    // if customer does not have a cart, initialize one for him
+    ArrayList<Cart> carts = (ArrayList<Cart>) findAllCarts();
+    if (carts.stream().noneMatch(cart -> cart.getBuyer().getId() == customer_id)) {
+      Customer customer = customerRepository.findCustomerById(customer_id);
+      Cart newCart = new Cart(0, customer);
+      cartRepository.save(newCart);
+    }
+
     return cartRepository.findCartByBuyer_Id(customer_id);
   }
 
@@ -110,15 +123,18 @@ public class ManageCartService {
   // Adding items to cart
 
   /**
-   * Add a jersey to a customer's cart, ensuring no invalid jerseys are added, as well as updating cart total price.
+   * Add a jersey to a customer's cart, ensuring no invalid jerseys are added, as well as updating
+   * cart total price.
+   *
    * @param customer_id ID of customer adding jersey to their cart
-   * @param item Jersey Instance being added
+   * @param item_id Jersey ID being added
    * @return CartItem association instance
+   * @author Mathieu Pestel
    */
   @Transactional
-  public CartItem addItemToCart(int customer_id, Jersey item) {
-
+  public CartItem addItemToCart(int customer_id, int item_id) {
     Cart customerCart = findCartByCustomerID(customer_id);
+    Jersey item = jerseyRepository.findJerseyById(item_id);
     ArrayList<Jersey> customerJerseys = (ArrayList<Jersey>) findAllJerseysByCustomerID(customer_id);
 
     // out of stock/unlisted error
@@ -127,7 +143,7 @@ public class ManageCartService {
     }
 
     // if item already in cart
-    if (customerJerseys.stream().anyMatch(jersey -> jersey.getId() == item.getId())) {
+    if (customerJerseys.stream().anyMatch(jersey -> jersey.getId() == item_id)) {
       throw new IllegalArgumentException("Item already in cart");
     }
 
@@ -135,7 +151,49 @@ public class ManageCartService {
     int previousPrice = customerCart.getTotalPrice();
     customerCart.setTotalPrice((int) (previousPrice + item.getSalePrice()));
 
-    return new CartItem(new CartItem.CartItemKey(customerCart, item));
+    CartItem cartItem = new CartItem(new CartItem.CartItemKey(customerCart, item));
+    cartItemRepository.save(cartItem);
+    return cartItem;
   }
 
+  // Removing items from cart
+
+  /**
+   * Remove a jersey from a customer's cart. If it wasn't in the cart, throw an error.
+   *
+   * @param customer_id ID of customer removing item from their cart
+   * @param item_id Jersey ID being removed
+   * @author Mathieu Pestel
+   */
+  @Transactional
+  public void removeItemFromCart(int customer_id, int item_id) {
+    Cart customerCart = findCartByCustomerID(customer_id);
+    Jersey item = jerseyRepository.findJerseyById(item_id);
+    ArrayList<Jersey> customerJerseys = (ArrayList<Jersey>) findAllJerseysByCustomerID(customer_id);
+
+    // if item isn't in cart
+    if (customerJerseys.stream().noneMatch(jersey -> jersey.getId() == item_id)) {
+      throw new IllegalArgumentException("Item not found in cart");
+    }
+
+    CartItem cartItem =
+        cartItemRepository.findCartItemByKey(new CartItem.CartItemKey(customerCart, item));
+    cartItemRepository.delete(cartItem);
+  }
+
+  /**
+   * Clear a customer's cart by removing every item in it.
+   *
+   * @param customer_id ID of customer clearing their cart
+   * @author Mathieu Pestel
+   */
+  @Transactional
+  public void clearCart(int customer_id) {
+    Cart customerCart = findCartByCustomerID(customer_id);
+    ArrayList<Jersey> customerJerseys = (ArrayList<Jersey>) findAllJerseysByCustomerID(customer_id);
+
+    for (Jersey jersey : customerJerseys) {
+      removeItemFromCart(customer_id, jersey.getId());
+    }
+  }
 }
