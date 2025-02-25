@@ -5,6 +5,6 @@ import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(features = "src/test/resources/US002_review_auth_requests.feature", glue = "ca.mcgill.ecse428.jerseycabinet.acceptance")
+@CucumberOptions(features = "src/test/resources/US003_search_listings.feature", glue = "ca.mcgill.ecse428.jerseycabinet.acceptance")
 public class RunCucumberTest {
 }
