@@ -1,14 +1,9 @@
 package ca.mcgill.ecse428.jerseycabinet.model;
 
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.Objects;
-
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "orders")
@@ -21,11 +16,15 @@ public class Order {
 
     private Date orderDate;
 
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status; // Added status field
+
     public Order() {}
 
-    public Order(OrderKey key, Date orderDate) {
+    public Order(OrderKey key, Date orderDate, OrderStatus status) {
         this.key = key;
         this.orderDate = orderDate;
+        this.status = status;
     }
 
     public OrderKey getKey() {
@@ -42,6 +41,14 @@ public class Order {
 
     public void setOrderDate(Date orderDate) {
         this.orderDate = orderDate;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
     }
 
     @Embeddable

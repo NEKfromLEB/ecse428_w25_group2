@@ -1,8 +1,12 @@
 package ca.mcgill.ecse428.jerseycabinet.dao;
 
-import ca.mcgill.ecse428.jerseycabinet.model.Order;
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 
-public interface OrderRepository extends CrudRepository<Order, Order.OrderKey>{
-    public Order findOrderByKey(Order.OrderKey key);
+import ca.mcgill.ecse428.jerseycabinet.model.Order;
+import ca.mcgill.ecse428.jerseycabinet.model.Order.OrderKey;
+
+public interface OrderRepository extends CrudRepository<Order, OrderKey> {
+    List<Order> findByKeyCustomerIdAndKeyJerseyId(Long customerId, Long jerseyId);
 }
