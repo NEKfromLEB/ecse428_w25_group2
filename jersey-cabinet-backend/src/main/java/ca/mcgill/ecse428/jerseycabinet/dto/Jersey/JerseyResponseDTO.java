@@ -14,7 +14,6 @@ public class JerseyResponseDTO {
     private String proofOfAuthenticationImage;
     private boolean listedForSale;
     private double salePrice;
-    private int employeeId;
     private int sellerId;
 
     public JerseyResponseDTO() {}
@@ -33,7 +32,6 @@ public class JerseyResponseDTO {
         this.proofOfAuthenticationImage = proofOfAuthenticationImage;
         this.listedForSale = listedForSale;
         this.salePrice = salePrice;
-        this.employeeId = employeeId;
         this.sellerId = sellerId;
     }
 
@@ -115,14 +113,6 @@ public class JerseyResponseDTO {
 
     public void setSalePrice(double salePrice) {
         this.salePrice = salePrice;
-    }
-
-    public int getEmployeeId() {
-        return employeeId;
-    }
-
-    public void setEmployeeId(int employeeId) {
-        this.employeeId = employeeId;
     }
 
     public int getSellerId() {

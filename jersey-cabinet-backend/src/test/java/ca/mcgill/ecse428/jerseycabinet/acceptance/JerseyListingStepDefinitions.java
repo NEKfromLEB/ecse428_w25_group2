@@ -35,7 +35,6 @@ public class JerseyListingStepDefinitions {
 
     private Jersey testJersey;
     private Customer testSeller;
-    private Employee testEmployee;
     private Exception errorException;
     private Jersey resultJersey;
 
@@ -43,7 +42,6 @@ public class JerseyListingStepDefinitions {
     public void setup() {
         MockitoAnnotations.openMocks(this);
         testSeller = new Customer();
-        testEmployee = new Employee();
     }
 
     @Given("I am a logged-in User")
@@ -51,13 +49,8 @@ public class JerseyListingStepDefinitions {
         // Authentication to be implemented
     }
 
-    @When("I navigate to the {string} page")
-    public void i_navigate_to_the_page(String pageName) {
-        // Navigation to be implemented in frontend
-    }
-
-    @And("I provide the required details including brand {string}, size {string}, condition {string}, and price {double}")
-    public void i_provide_required_details(String brand, String size, String condition, double price) {
+    @And("I provide the required details including {string}, {string}, {string}, and {double}")
+    public void i_provide_the_required_details_including_and(String brand, String size, String condition, double price) {
         testJersey = new Jersey(
             Jersey.RequestState.Unlisted,
             "Test Description",
@@ -67,7 +60,6 @@ public class JerseyListingStepDefinitions {
             "jersey.jpg",
             "auth.jpg",
             price,
-            testEmployee,
             testSeller
         );
         when(jerseyRepository.findJerseyById(1)).thenReturn(testJersey);
@@ -90,7 +82,6 @@ public class JerseyListingStepDefinitions {
                 testJersey.getJerseyImage(),
                 testJersey.getProofOfAuthenticationImage(),
                 testJersey.getSalePrice(),
-                testJersey.getEmployee(),
                 testJersey.getSeller()
             );
             when(jerseyRepository.updateJerseyRequestState(1, Jersey.RequestState.Listed))
@@ -113,14 +104,30 @@ public class JerseyListingStepDefinitions {
         assertTrue(resultJersey.getRequestState() == Jersey.RequestState.Listed);
     }
 
+    @When("I navigate to the \"Sell Jersey\" page")
+    public void i_navigate_to_the_sell_jersey_page(){
+        testJersey = new Jersey(
+            Jersey.RequestState.Listed,
+            "Test Description",
+            "Nike",
+            "Hockey",
+            "Red",
+            "jersey.jpg",
+            "auth.jpg",
+            100,
+            testSeller
+        );
+    }
+
     @And("I leave the {string} field empty")
     public void i_leave_field_empty(String fieldName) {
-        if (fieldName.equals("price")) {
-            testJersey.setSalePrice(0.0);
-        } else if (fieldName.equals("brand")) {
-            testJersey.setBrand(null);
+        try{
+            resultJersey = jerseyService.updateJerseyListing(1, 
+            new JerseyListingDTO(1, 0, testJersey.getDescription()));
         }
-        when(jerseyRepository.findJerseyById(1)).thenReturn(testJersey);
+        catch (Exception e){
+            errorException = e;
+        }
     }
 
     @Then("I should see an error message {string}")
@@ -136,8 +143,27 @@ public class JerseyListingStepDefinitions {
 
     @Given("I have already listed a jersey for sale")
     public void i_have_listed_jersey() {
-        testJersey.setRequestState(Jersey.RequestState.Listed);
+        testJersey = new Jersey(
+            Jersey.RequestState.Listed,
+            "Test Description",
+            "Nike",
+            "Hockey",
+            "Red",
+            "jersey.jpg",
+            "auth.jpg",
+            100,
+            testSeller
+        );
         when(jerseyRepository.findJerseyById(1)).thenReturn(testJersey);
+    }
+
+    @Given("I am on the {string} page")
+    public void i_am_on_the_page(String string) {
+        // Write code here that turns the phrase above into concrete actions
+    }
+    @When("I click on the {string} button for my jersey")
+    public void i_click_on_the_button_for_my_jersey(String string) {
+        // Write code here that turns the phrase above into concrete actions
     }
 
     @When("I update the {string} to {string}")

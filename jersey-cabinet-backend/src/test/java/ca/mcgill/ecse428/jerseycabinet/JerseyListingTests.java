@@ -29,12 +29,10 @@ public class JerseyListingTests {
 
     private Jersey testJersey;
     private Customer testSeller;
-    private Employee testEmployee;
 
     @BeforeEach
     void setUp() {
         testSeller = new Customer();
-        testEmployee = new Employee();
         testJersey = new Jersey(
             Jersey.RequestState.Unlisted,
             "Test Description",
@@ -44,7 +42,6 @@ public class JerseyListingTests {
             "jersey.jpg",
             "auth.jpg",
             120.0,
-            testEmployee,
             testSeller
         );
     }
@@ -64,7 +61,6 @@ public class JerseyListingTests {
             testJersey.getJerseyImage(),
             testJersey.getProofOfAuthenticationImage(),
             testJersey.getSalePrice(),
-            testJersey.getEmployee(),
             testJersey.getSeller()
         );
         
