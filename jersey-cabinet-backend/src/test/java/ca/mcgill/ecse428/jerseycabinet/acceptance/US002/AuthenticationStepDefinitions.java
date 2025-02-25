@@ -119,7 +119,7 @@ public class AuthenticationStepDefinitions {
     @And("the jersey remains in the list of requests to be reviewed.")
     public void the_jersey_remains_in_the_list_of_requests_to_be_reviewed(){
         assertNotNull(authenService.findAllUnreviewedJerseys());
-        assertEquals(authenService.findAllUnreviewedJerseys().get(1).getId(),jersey1.getId());
+        assertEquals(authenService.findAllUnreviewedJerseys().get(0).getId(),jersey1.getId());
     }
     
    
