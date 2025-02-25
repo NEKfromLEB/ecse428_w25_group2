@@ -5,4 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface JerseyRepository extends CrudRepository<Jersey, Integer> {
     public Jersey findJerseyById(int id);
+    public Jersey updateJerseyRequestState(int id, Jersey.RequestState requestState);
 }
