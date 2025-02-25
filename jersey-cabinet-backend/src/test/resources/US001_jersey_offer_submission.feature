@@ -6,7 +6,12 @@ Feature: Employee Jersey Offer Submission
 
   Background:
     Given the store has a jersey offer submission system
-    And a jersey offer exists in the system
+    And the following jersey offers exist in the system:
+      | jersey_offer_id |
+      | 1001            |
+      | 1002            |
+      | 1003            |
+      | 1004            |
     And an employee account exists
 
   Scenario Outline: Employee successfully submits an offer
