@@ -7,9 +7,9 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(
     features = "src/test/resources/US008_publish_auth_listings.feature",
-    glue = "ca.mcgill.ecse428.jerseycabinet.acceptance",
+    glue = "ca.mcgill.ecse428.jerseycabinet.acceptance.US008",
     plugin = {"pretty", "html:target/cucumber-reports"},
     monochrome = true
 )
-public class RunCucumberTest {
+public class RunCucumberTest_8 {
 }
