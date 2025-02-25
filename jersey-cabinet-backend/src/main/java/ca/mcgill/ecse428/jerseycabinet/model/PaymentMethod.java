@@ -33,6 +33,8 @@ public class PaymentMethod
   // CONSTRUCTOR
   //------------------------
 
+  public PaymentMethod() {}
+
   public PaymentMethod(String aBillingAddress, String aCardName, String aCardNumber, String aCardCVV, Date aCardExpiryDate, Customer aCustomer)
   {
     billingAddress = aBillingAddress;
