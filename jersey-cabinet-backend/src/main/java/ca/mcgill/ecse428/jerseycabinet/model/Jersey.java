@@ -181,6 +181,7 @@ public class Jersey
 
   public double getSalePrice(){
     return salePrice;
+  }
   public Employee getEmployee()
   {
     return employee;

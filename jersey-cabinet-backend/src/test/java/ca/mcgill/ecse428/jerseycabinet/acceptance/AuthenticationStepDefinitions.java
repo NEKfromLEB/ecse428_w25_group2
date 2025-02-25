@@ -56,7 +56,7 @@ public class AuthenticationStepDefinitions {
     public void the_following_authentication_requests_exist_in_the_system(io.cucumber.datatable.DataTable dataTable){
         customer = new Customer("tee@gmail.com","hehe123","123 Main Street");
 
-        this.jersey1 = new Jersey(null,"This is a jersey.","Nike","soccer","black",null,null,customer);
+        this.jersey1 = new Jersey(null,"This is a jersey.","Nike","soccer","black","", "", 100,customer);
         customerRepo.save(this.customer);
         jerseyRepo.save(this.jersey1);
         this.id = this.jersey1.getId();
