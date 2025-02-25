@@ -1,4 +1,4 @@
-package ca.mcgill.ecse428.jerseycabinet.acceptance;
+package ca.mcgill.ecse428.jerseycabinet.acceptance.US004;
 
 import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
