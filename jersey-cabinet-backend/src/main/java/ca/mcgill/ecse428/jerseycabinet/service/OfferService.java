@@ -22,22 +22,25 @@ public class OfferService {
     private EmployeeRepository employeeRepository;
 
     public Offer placeOffer(int jerseyId, int employeeId, int price) {
+        // 1) Check for negative price
+        if (price < 0) {
+            throw new IllegalArgumentException("Please enter a non-negative offer amount.");
+        }
+
+        // 2) Find the Jersey
         Jersey jersey = jerseyRepository.findById(jerseyId)
                 .orElseThrow(() -> new IllegalArgumentException("Jersey not found"));
+
+        // 3) Find the Employee
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
 
+        // 4) Create the Offer
         Offer.OfferKey key = new Offer.OfferKey(jersey, employee);
-
         Offer offer = new Offer(key, Offer.OfferState.Pending, price);
 
+        // 5) Save and return
         return offerRepository.save(offer);
     }
-
-    // Overloaded method using a DTO
-//    public Offer placeOffer(OfferDTO dto) {
-//        // Very similar logic, just pulling jerseyId, employeeId, and price from the DTO
-//        // Then build and save the Offer
-//    }
 }
 
