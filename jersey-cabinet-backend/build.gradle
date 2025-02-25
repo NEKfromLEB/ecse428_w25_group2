@@ -1,7 +1,7 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.4.2'
-	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.springframework.boot' version '3.2.2'
+	id 'io.spring.dependency-management' version '1.1.4'
 }
 
 group = 'ca.mcgill.ecse428'
@@ -21,8 +21,25 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	runtimeOnly 'org.postgresql:postgresql'
+	
+	// Testing dependencies
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'junit:junit:4.13.2'
+	testImplementation 'org.junit.vintage:junit-vintage-engine'
+	
+	// Cucumber dependencies
+	testImplementation 'io.cucumber:cucumber-java:7.14.0'
+	testImplementation 'io.cucumber:cucumber-spring:7.14.0'
+	testImplementation 'io.cucumber:cucumber-junit:7.14.0'
+	
+	// JUnit Platform dependencies
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+
+test {
+	useJUnit()
+	systemProperty "cucumber.filter.tags", System.getProperty("cucumber.filter.tags")
 }
 
 tasks.named('test') {

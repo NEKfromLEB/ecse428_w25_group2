@@ -1,16 +1,10 @@
 package ca.mcgill.ecse428.jerseycabinet.model;
 
-/*PLEASE DO NOT EDIT THIS CODE*/
-/*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
-
-
-import java.util.*;
-
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
-// line 28 "model.ump"
-// line 73 "model.ump"
 @Entity
 public class Jersey
 {
@@ -20,51 +14,53 @@ public class Jersey
   //------------------------
 
   public enum RequestState { Rejected, Unlisted, Listed, Bought }
-
-  //-----------------------
-  // MEMBER VARIABLES
-  //-----------------------
-  private static int nextId = 1;
+  public enum HomeAway { Home, Away }
+  public enum Condition { BrandNew, LikeNew, Used }
+  public enum Size { Small, Medium, Large, ExtraLarge }
+  public enum AuthenticationApprovalStatus { Pending, Approved, Rejected }
 
   //------------------------
   // MEMBER VARIABLES
   //------------------------
 
   //Jersey Attributes
+  @Id
+  @GeneratedValue
+  private int id;
   private RequestState requestState;
   private String description;
-
-  //Autounique Attributes
-  @Id
-  private int id;
-  
-  
+  private String brand;
+  private String sport;
+  private String color;
+  private String jerseyImage;
+  private String proofOfAuthenticationImage;
+  private double salePrice;
 
   //Jersey Associations
+  @ManyToOne
   private Employee employee;
+  @ManyToOne
   private Customer seller;
-  private List<Offer> offers;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
+  public Jersey(){}
 
-  public Jersey(RequestState aRequestState, String aDescription, Employee aEmployee, Customer aSeller)
+  public Jersey(RequestState aRequestState, String aDescription, String aBrand, String aSport, String aColor, String aJerseyImage, String aProofOfAuthenticationImage, double aSalePrice,  Customer aSeller)
   {
     requestState = aRequestState;
     description = aDescription;
-    id = nextId++;
-    boolean didAddEmployee = setEmployee(aEmployee);
-    if (!didAddEmployee)
+    brand = aBrand;
+    sport = aSport;
+    color = aColor;
+    jerseyImage = aJerseyImage;
+    salePrice = aSalePrice;
+    proofOfAuthenticationImage = aProofOfAuthenticationImage;
+    if (!setSeller(aSeller))
     {
-      throw new RuntimeException("Unable to create jersey due to employee. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
+      throw new RuntimeException("Unable to create Jersey due to aSeller. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
     }
-    boolean didAddSeller = setSeller(aSeller);
-    if (!didAddSeller)
-    {
-      throw new RuntimeException("Unable to create ToSell due to seller. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
-    offers = new ArrayList<Offer>();
   }
 
   //------------------------
@@ -87,6 +83,62 @@ public class Jersey
     return wasSet;
   }
 
+  public boolean setId(int aId)
+  {
+    boolean wasSet = false;
+    id = aId;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setBrand(String aBrand)
+  {
+    boolean wasSet = false;
+    brand = aBrand;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setSport(String aSport)
+  {
+    boolean wasSet = false;
+    sport = aSport;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setColor(String aColor)
+  {
+    boolean wasSet = false;
+    color = aColor;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setJerseyImage(String aJerseyImage)
+  {
+    boolean wasSet = false;
+    jerseyImage = aJerseyImage;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setProofOfAuthenticationImage(String aProofOfAuthenticationImage)
+  {
+    boolean wasSet = false;
+    proofOfAuthenticationImage = aProofOfAuthenticationImage;
+    wasSet = true;
+    return wasSet;
+  }
+
+  public boolean setSalePrice(double aSalePrice)
+  {
+    boolean wasSet = false;
+    salePrice = aSalePrice;
+    wasSet = true;
+    return wasSet;
+  }
+
   public RequestState getRequestState()
   {
     return requestState;
@@ -97,187 +149,100 @@ public class Jersey
     return description;
   }
 
-  public int getId(){
+  public int getId()
+  {
     return id;
   }
-  /* Code from template association_GetOne */
+
+  public String getBrand()
+  {
+    return brand;
+  }
+
+  public String getSport()
+  {
+    return sport;
+  }
+
+  public String getColor()
+  {
+    return color;
+  }
+
+  public String getJerseyImage()
+  {
+    return jerseyImage;
+  }
+
+  public String getProofOfAuthenticationImage()
+  {
+    return proofOfAuthenticationImage;
+  }
+
+  public double getSalePrice(){
+    return salePrice;
+  }
   public Employee getEmployee()
   {
     return employee;
   }
+
+  public boolean hasEmployee(){
+    boolean has = employee != null;
+    return has;
+  }
+ //Code from template association_SetUnidirectionalOptionalOne
+  public boolean setEmployee(Employee aNewEmployee){
+    boolean wasSet = false;
+    employee = aNewEmployee;
+    wasSet = true;
+    return wasSet;
+  }  
   /* Code from template association_GetOne */
   public Customer getSeller()
   {
     return seller;
   }
-  /* Code from template association_GetMany */
-  public Offer getOffer(int index)
-  {
-    Offer aOffer = offers.get(index);
-    return aOffer;
-  }
 
-  public List<Offer> getOffers()
-  {
-    List<Offer> newOffers = Collections.unmodifiableList(offers);
-    return newOffers;
-  }
-
-  public int numberOfOffers()
-  {
-    int number = offers.size();
-    return number;
-  }
-
-  public boolean hasOffers()
-  {
-    boolean has = offers.size() > 0;
-    return has;
-  }
-
-  public int indexOfOffer(Offer aOffer)
-  {
-    int index = offers.indexOf(aOffer);
-    return index;
-  }
-  /* Code from template association_SetOneToMany */
-  public boolean setEmployee(Employee aEmployee)
+  /* Code from template association_SetUnidirectionalOne */
+  public boolean setSeller(Customer aNewSeller)
   {
     boolean wasSet = false;
-    if (aEmployee == null)
+    if (aNewSeller != null)
     {
-      return wasSet;
+      seller = aNewSeller;
+      wasSet = true;
     }
-
-    Employee existingEmployee = employee;
-    employee = aEmployee;
-    if (existingEmployee != null && !existingEmployee.equals(aEmployee))
-    {
-      existingEmployee.removeJersey(this);
-    }
-    employee.addJersey(this);
-    wasSet = true;
     return wasSet;
-  }
-  /* Code from template association_SetOneToMany */
-  public boolean setSeller(Customer aSeller)
-  {
-    boolean wasSet = false;
-    if (aSeller == null)
-    {
-      return wasSet;
-    }
-
-    Customer existingSeller = seller;
-    seller = aSeller;
-    if (existingSeller != null && !existingSeller.equals(aSeller))
-    {
-      existingSeller.removeToSell(this);
-    }
-    seller.addToSell(this);
-    wasSet = true;
-    return wasSet;
-  }
-  /* Code from template association_MinimumNumberOfMethod */
-  public static int minimumNumberOfOffers()
-  {
-    return 0;
-  }
-  /* Code from template association_AddManyToOne */
-  public Offer addOffer(Offer.OfferState aOfferState, int aPrice, Employee aEmployee) {
-    Offer.Key key = new Offer.Key(this, aEmployee); 
-    Offer newOffer = new Offer(key, aOfferState, aPrice);
-    this.offers.add(newOffer); 
-    return newOffer;
-}
-
-  public boolean addOffer(Offer aOffer) {
-      if (aOffer == null || offers.contains(aOffer)) {
-          return false;
-      }
-
-      Jersey existingJersey = aOffer.getKey().getJersey(); 
-      if (existingJersey != null && !this.equals(existingJersey)) {
-          existingJersey.removeOffer(aOffer); 
-      }
-
-      aOffer.getKey().setJersey(this); 
-      offers.add(aOffer);
-      return true;
-  }
-
-  public boolean removeOffer(Offer aOffer) {
-      if (aOffer == null || !offers.contains(aOffer)) {
-          return false;
-      }
-
-      if (this.equals(aOffer.getKey().getJersey())) {
-          offers.remove(aOffer);
-          return true;
-      }
-      return false;
-  }
-  /* Code from template association_AddIndexControlFunctions */
-  public boolean addOfferAt(Offer aOffer, int index)
-  {  
-    boolean wasAdded = false;
-    if(addOffer(aOffer))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfOffers()) { index = numberOfOffers() - 1; }
-      offers.remove(aOffer);
-      offers.add(index, aOffer);
-      wasAdded = true;
-    }
-    return wasAdded;
-  }
-
-  public boolean addOrMoveOfferAt(Offer aOffer, int index)
-  {
-    boolean wasAdded = false;
-    if(offers.contains(aOffer))
-    {
-      if(index < 0 ) { index = 0; }
-      if(index > numberOfOffers()) { index = numberOfOffers() - 1; }
-      offers.remove(aOffer);
-      offers.add(index, aOffer);
-      wasAdded = true;
-    } 
-    else 
-    {
-      wasAdded = addOfferAt(aOffer, index);
-    }
-    return wasAdded;
   }
 
   public void delete()
   {
-    Employee placeholderEmployee = employee;
-    this.employee = null;
-    if(placeholderEmployee != null)
-    {
-      placeholderEmployee.removeJersey(this);
-    }
-    Customer placeholderSeller = seller;
-    this.seller = null;
-    if(placeholderSeller != null)
-    {
-      placeholderSeller.removeToSell(this);
-    }
-    for(int i=offers.size(); i > 0; i--)
-    {
-      Offer aOffer = offers.get(i - 1);
-      aOffer.delete();
-    }
+    employee = null;
+    seller = null;
   }
 
 
   public String toString()
   {
+  
     return super.toString() + "["+
+            "description" + ":" + getDescription()+ "," +
+            "description" + ":" + getDescription()+ "," +
             "id" + ":" + getId()+ "," +
-            "description" + ":" + getDescription()+ "]" + System.getProperties().getProperty("line.separator") +
+            "id" + ":" + getId()+ "," +
+            "brand" + ":" + getBrand()+ "," +
+            "brand" + ":" + getBrand()+ "," +
+            "sport" + ":" + getSport()+ "," +
+            "sport" + ":" + getSport()+ "," +
+            "color" + ":" + getColor()+ "," +
+            "color" + ":" + getColor()+ "," +
+            "jerseyImage" + ":" + getJerseyImage()+ "," +
+            "jerseyImage" + ":" + getJerseyImage()+ "," +
+            "proofOfAuthenticationImage" + ":" + getProofOfAuthenticationImage()+ "," +
+            "salePrice" + ":" + getSalePrice()+ "]" + System.getProperties().getProperty("line.separator") +
             "  " + "requestState" + "=" + (getRequestState() != null ? !getRequestState().equals(this)  ? getRequestState().toString().replaceAll("  ","    ") : "this" : "null") + System.getProperties().getProperty("line.separator") +
+            "  " + "employee = "+(getEmployee()!=null?Integer.toHexString(System.identityHashCode(getEmployee())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "employee = "+(getEmployee()!=null?Integer.toHexString(System.identityHashCode(getEmployee())):"null") + System.getProperties().getProperty("line.separator") +
             "  " + "seller = "+(getSeller()!=null?Integer.toHexString(System.identityHashCode(getSeller())):"null");
   }

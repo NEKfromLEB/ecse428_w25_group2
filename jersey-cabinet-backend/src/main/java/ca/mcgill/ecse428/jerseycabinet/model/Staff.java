@@ -5,7 +5,6 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.MappedSuperclass;
 
 @MappedSuperclass
-@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Staff extends User
 {
 
@@ -16,12 +15,11 @@ public abstract class Staff extends User
   //------------------------
   // CONSTRUCTOR
   //------------------------
-  protected Staff(){
-  }
+  public Staff(){}
 
-  public Staff(int aId, String aEmail, String aPassword)
+  public Staff(String aEmail, String aPassword)
   {
-    super(aId, aEmail, aPassword);
+    super(aEmail, aPassword);
   }
 
   //------------------------
