@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-    RunCucumberSteps_7.class,
+    RunCucumberTest_7.class,
     RunCucumberTest_2.class,
     RunCucumberTest_3.class,
     RunCucumberTest_4.class,

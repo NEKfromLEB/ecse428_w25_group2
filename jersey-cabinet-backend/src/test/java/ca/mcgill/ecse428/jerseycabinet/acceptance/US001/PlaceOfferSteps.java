@@ -1,4 +1,4 @@
-package ca.mcgill.ecse428.jerseycabinet.acceptance;
+package ca.mcgill.ecse428.jerseycabinet.acceptance.US001;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
