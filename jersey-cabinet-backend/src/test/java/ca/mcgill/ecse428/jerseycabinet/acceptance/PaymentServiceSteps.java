@@ -22,10 +22,8 @@ public class PaymentServiceSteps {
 
     @Autowired
     private PaymentService paymentService;
-
     @Autowired
     private CustomerRepository customerRepository;
-
     @Autowired
     private PaymentMethodRepository paymentMethodRepository;
 
@@ -35,6 +33,7 @@ public class PaymentServiceSteps {
     private PaymentMethod processedPayment;
     private Exception exception;
 
+    // Background
     @Given("the store has an online checkout system")
     public void the_store_has_an_online_checkout_system() {
         paymentMethodRepository.deleteAll();
@@ -48,23 +47,12 @@ public class PaymentServiceSteps {
         assertNotNull(customer);
     }
 
+    // Normal Flow
     @When("the user fills out the card information with card number {string}, expiration date {string}, CVV {string}, and cardholder name {string}")
     public void the_user_fills_out_card_information(String cardNumber, String expirationDate, String cvv, String cardholderName) {
         paymentDTO = new PaymentDTO();
         paymentDTO.setCardNumber(cardNumber);
-        
-        // Safely handle date conversion
-        if (expirationDate != null && !expirationDate.isEmpty()) {
-            try {
-                String[] parts = expirationDate.split("/");
-                String month = parts[0];
-                String year = "20" + parts[1];
-                paymentDTO.setExpirationDate(year + "-" + month + "-01");
-            } catch (Exception e) {
-                paymentDTO.setExpirationDate("");  // Handle invalid date format
-            }
-        }
-        
+        paymentDTO.setExpirationDate(formatDate(expirationDate));
         paymentDTO.setCvv(cvv);
         paymentDTO.setCardHolderName(cardholderName);
         billingAddress = "123 Test Street, Test City, TS 12345";
@@ -73,7 +61,14 @@ public class PaymentServiceSteps {
     @When("the user submits the payment form")
     public void the_user_submits_the_payment_form() {
         try {
-            processedPayment = paymentService.processPayment(paymentDTO, billingAddress, customer);
+            processedPayment = paymentService.processPayment(
+                paymentDTO.getCardNumber(),
+                paymentDTO.getCardHolderName(),
+                paymentDTO.getExpirationDate(),
+                paymentDTO.getCvv(),
+                billingAddress,
+                customer
+            );
         } catch (Exception e) {
             exception = e;
         }
@@ -86,13 +81,16 @@ public class PaymentServiceSteps {
         assertEquals(paymentDTO.getCardHolderName(), processedPayment.getCardName());
     }
 
+    @Then("the order shall be recorded in the system")
+    public void the_order_shall_be_recorded_in_the_system() {
+        assertNotNull(processedPayment);
+        assertNotNull(processedPayment.getId());
+    }
+
+    // Alternative Flow
     @When("any field is missing")
     public void any_field_is_missing() {
-        try {
-            processedPayment = paymentService.processPayment(paymentDTO, billingAddress, customer);
-        } catch (Exception e) {
-            exception = e;
-        }
+        submitPayment();
     }
 
     @Then("the system warns: {string}")
@@ -106,21 +104,16 @@ public class PaymentServiceSteps {
         assertNull(processedPayment);
     }
 
+    // Error Flow
     @When("the user enters invalid card information with card number {string}, expiration date {string}, CVV {string}, or cardholder name {string}")
     public void the_user_enters_invalid_card_information(String cardNumber, String expirationDate, String cvv, String cardholderName) {
         paymentDTO = new PaymentDTO();
         paymentDTO.setCardNumber(cardNumber);
-        paymentDTO.setExpirationDate("invalid-date");  
+        paymentDTO.setExpirationDate("invalid-date");
         paymentDTO.setCvv(cvv);
         paymentDTO.setCardHolderName(cardholderName);
         billingAddress = "123 Test Street, Test City, TS 12345";
-        
-        // Try to process the payment immediately to trigger the exception
-        try {
-            processedPayment = paymentService.processPayment(paymentDTO, billingAddress, customer);
-        } catch (Exception e) {
-            exception = e;
-        }
+        submitPayment();
     }
 
     @Then("the system prevents submission")
@@ -134,18 +127,40 @@ public class PaymentServiceSteps {
         assertEquals(errorMessage, exception.getMessage());
     }
 
-    @Then("the order shall be recorded in the system")
-    public void the_order_shall_be_recorded_in_the_system() {
-        assertNotNull(processedPayment);
-        assertNotNull(processedPayment.getId());
-    }
-
     @Then("the form remains on the page for correction")
     public void the_form_remains_on_the_page_for_correction() {
         assertNull(processedPayment);
         assertNotNull(exception);
     }
 
+    // Helper Methods
+    private String formatDate(String date) {
+        try {
+            String[] parts = date.split("/");
+            String month = parts[0];
+            String year = "20" + parts[1];
+            return year + "-" + month + "-01";
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    private void submitPayment() {
+        try {
+            processedPayment = paymentService.processPayment(
+                paymentDTO.getCardNumber(),
+                paymentDTO.getCardHolderName(),
+                paymentDTO.getExpirationDate(),
+                paymentDTO.getCvv(),
+                billingAddress,
+                customer
+            );
+        } catch (Exception e) {
+            exception = e;
+        }
+    }
+
+    // Cleanup
     @After
     public void tearDown() {
         paymentMethodRepository.deleteAll();
