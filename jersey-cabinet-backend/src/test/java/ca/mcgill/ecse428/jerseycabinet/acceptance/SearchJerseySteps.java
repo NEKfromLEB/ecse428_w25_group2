@@ -65,13 +65,13 @@ public class SearchJerseySteps {
         employeeRepo.save(employee);
         customerRepo.save(customer);
 
-        jersey1 = new Jersey(RequestState.Listed, "2002 Brazil Home", "", "soccer", "", "", "", 0, employee, customer);
+        jersey1 = new Jersey(RequestState.Listed, "2002 Brazil Home", "", "soccer", "", "", "", 0, customer);
 
-        jersey2 = new Jersey(RequestState.Listed, "2006 AC Milan Home", "", "soccer", "", "", "", 0, employee, customer);
+        jersey2 = new Jersey(RequestState.Listed, "2006 AC Milan Home", "", "soccer", "", "", "", 0, customer);
 
-        jersey3 = new Jersey(RequestState.Listed, "1992 Chicago Bulls", "", "basketball", "", "", "", 0, employee, customer);
+        jersey3 = new Jersey(RequestState.Listed, "1992 Chicago Bulls", "", "basketball", "", "", "", 0, customer);
 
-        jersey4 = new Jersey(RequestState.Listed, "1984 Las Vegas Raiders", "", "football", "", "", "", 0, employee, customer);
+        jersey4 = new Jersey(RequestState.Listed, "1984 Las Vegas Raiders", "", "football", "", "", "", 0, customer);
 
         jerseyRepo.save(jersey1);
         jerseyRepo.save(jersey2);
