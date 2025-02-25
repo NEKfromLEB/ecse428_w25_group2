@@ -196,4 +196,28 @@ public class ManageCartService {
       removeItemFromCart(customer_id, jersey.getId());
     }
   }
+
+  // View cart
+
+  /**
+   * Method to view ArrayList of jerseys in a customer's cart. Updates the cart in case any jerseys have become unavailable.
+   * @param customer_id ID of customer requesting to view his cart
+   * @return Array List of jersey instances in the customer's cart
+   * @author Mathieu Pestel
+   */
+  @Transactional
+  public ArrayList<Jersey> viewCart(int customer_id) {
+    ArrayList<Jersey> cartJerseys = (ArrayList<Jersey>) findAllJerseysByCustomerID(customer_id);
+
+    // update cart if previous jerseys have become unavailable.
+    for (Jersey jersey : cartJerseys) {
+      if (jersey.getRequestState() != Jersey.RequestState.Listed) {
+        removeItemFromCart(customer_id, jersey.getId());
+        cartJerseys.remove(jersey);
+      }
+    }
+
+    return cartJerseys;
+  }
 }
+
