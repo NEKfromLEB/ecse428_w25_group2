@@ -47,7 +47,7 @@ public class Jersey
   //------------------------
   public Jersey(){}
 
-  public Jersey(RequestState aRequestState, String aDescription, String aBrand, String aSport, String aColor, String aJerseyImage, String aProofOfAuthenticationImage, double aSalePrice, Employee aEmployee, Customer aSeller)
+  public Jersey(RequestState aRequestState, String aDescription, String aBrand, String aSport, String aColor, String aJerseyImage, String aProofOfAuthenticationImage, double aSalePrice,  Customer aSeller)
   {
     requestState = aRequestState;
     description = aDescription;
@@ -57,11 +57,6 @@ public class Jersey
     jerseyImage = aJerseyImage;
     salePrice = aSalePrice;
     proofOfAuthenticationImage = aProofOfAuthenticationImage;
-
-    if (!setEmployee(aEmployee))
-    {
-      throw new RuntimeException("Unable to create Jersey due to aEmployee. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
-    }
     if (!setSeller(aSeller))
     {
       throw new RuntimeException("Unable to create Jersey due to aSeller. See https://manual.umple.org?RE002ViolationofAssociationMultiplicity.html");
@@ -187,27 +182,28 @@ public class Jersey
   public double getSalePrice(){
     return salePrice;
   }
-  /* Code from template association_GetOne */
   public Employee getEmployee()
   {
     return employee;
   }
+
+  public boolean hasEmployee(){
+    boolean has = employee != null;
+    return has;
+  }
+ //Code from template association_SetUnidirectionalOptionalOne
+  public boolean setEmployee(Employee aNewEmployee){
+    boolean wasSet = false;
+    employee = aNewEmployee;
+    wasSet = true;
+    return wasSet;
+  }  
   /* Code from template association_GetOne */
   public Customer getSeller()
   {
     return seller;
   }
-  /* Code from template association_SetUnidirectionalOne */
-  public boolean setEmployee(Employee aNewEmployee)
-  {
-    boolean wasSet = false;
-    if (aNewEmployee != null)
-    {
-      employee = aNewEmployee;
-      wasSet = true;
-    }
-    return wasSet;
-  }
+
   /* Code from template association_SetUnidirectionalOne */
   public boolean setSeller(Customer aNewSeller)
   {
