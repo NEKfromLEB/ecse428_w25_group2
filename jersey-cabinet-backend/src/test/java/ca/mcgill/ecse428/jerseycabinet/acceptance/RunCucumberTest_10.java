@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 @RunWith(Cucumber.class)
 @CucumberOptions(
     features = "src/test/resources/US010_payment_system.feature",
-    glue = "ca.mcgill.ecse428.jerseycabinet.acceptance"
+    glue = "ca.mcgill.ecse428.jerseycabinet.acceptance.US010"
 )
-public class RunCucumberTestPayment {
+public class RunCucumberTest_10 {
 } 
