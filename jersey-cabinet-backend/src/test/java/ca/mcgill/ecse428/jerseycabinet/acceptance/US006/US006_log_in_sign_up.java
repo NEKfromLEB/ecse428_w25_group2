@@ -1,4 +1,4 @@
-package ca.mcgill.ecse428.jerseycabinet;
+package ca.mcgill.ecse428.jerseycabinet.acceptance.US006;
 
 import static org.junit.jupiter.api.Assertions.*;
 

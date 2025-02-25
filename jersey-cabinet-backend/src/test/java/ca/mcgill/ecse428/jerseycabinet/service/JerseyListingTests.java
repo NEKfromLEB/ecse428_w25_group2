@@ -1,4 +1,4 @@
-package ca.mcgill.ecse428.jerseycabinet;
+package ca.mcgill.ecse428.jerseycabinet.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
