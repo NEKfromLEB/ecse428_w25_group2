@@ -92,5 +92,18 @@ public class OfferService {
 
         return offer;
     }
+
+    public void removeOffer(int jerseyId, int employeeId){
+        Jersey jersey = jerseyRepository.findById(jerseyId)
+                .orElseThrow(() -> new IllegalArgumentException("Jersey not found"));
+
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
+        
+        Offer.OfferKey key = new Offer.OfferKey(jersey, employee);
+        Offer offer = offerRepository.findOfferByKey(key);
+
+        offerRepository.delete(offer);
+    }
 }
 
