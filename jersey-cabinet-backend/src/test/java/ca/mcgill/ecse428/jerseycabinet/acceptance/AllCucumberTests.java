@@ -13,7 +13,8 @@ import org.junit.runners.Suite;
     RunCucumberTest_9.class,
     RunCucumberTest_10.class,
     RunCucumberTest_8.class,
-    RunCucumberTest_6.class
+    RunCucumberTest_6.class,
+    RunCucumberTest_1.class
 })
 public class AllCucumberTests {
 
