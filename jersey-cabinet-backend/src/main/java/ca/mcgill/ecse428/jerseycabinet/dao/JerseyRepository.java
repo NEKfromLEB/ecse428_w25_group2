@@ -6,7 +6,6 @@ import jakarta.transaction.Transactional;
 
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-=======
 import ca.mcgill.ecse428.jerseycabinet.model.Jersey.RequestState;
 
 
