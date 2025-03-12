@@ -1,11 +1,7 @@
-Feature: Modify/Delete Accounts
-As a user,  
-I want to modify or delete my account securely,  
-So that I can keep my information up to date or remove my account if needed.  
-
-As a manager,  
-I want to modify or delete the account of clients and employees,  
-So that I can keep their information up to date or remove their account if needed.  
+Feature: Modify/Delete Accounts of users
+  As a user,  
+  I want to modify or delete my account securely,  
+  So that I can keep my information up to date or remove my account if needed.   
 
   Background:  
     Given the system has an account management platform  
@@ -31,16 +27,6 @@ So that I can keep their information up to date or remove their account if neede
       | namir@store.com      | Secure99      |  
       | habib@shop.com       | Pass12        |  
 
-  Scenario Outline: Manager modifies another user’s email  
-    Given the manager is logged in  
-    When the manager updates the email of user "<user_email>" to "<new_email>"  
-    Then the system updates the user's email  
-
-    Examples:  
-      | user_email          | new_email             |
-      | mahmoud@mail.com    | updateduser@mail.com  | 
-      | amin@store.com      | newstaff@shop.com     | 
-
   Scenario Outline: Customer deletes their own account  
     Given the customer or manager requests deletion  
     When they enter their email "<email>" and password "<password>"  
@@ -54,7 +40,7 @@ So that I can keep their information up to date or remove their account if neede
 
  ## Alternative Flows 
 
-  Scenario Outline: Customer modifies only email or password or address
+  Scenario Outline: Customer modifies only thier email or password or address
     When the customer updates either their email to "<new_email>" or password to "<new_password>" or address to "<new_address>"
     Then the system updates only the provided information successfully
 
@@ -64,7 +50,7 @@ So that I can keep their information up to date or remove their account if neede
       |                   | NewPass789   |                       |
       |                   |              | 123 Main St, Montreal |
  
-  Scenario Outline: Employee modifies only email or password  
+  Scenario Outline: Employee modifies only their email or password  
     When the employee updates either their email to "<new_email>" or password to "<new_password>"  
     Then the system updates only the provided information successfully
 
@@ -85,18 +71,6 @@ Scenario Outline: Incomplete account deletion for client
     |                         | 123       |  
     | mahmoud@email.com       |           |  
 
-Scenario Outline: Incomplete account deletion for user by manager
-  Given the user is a manager  
-  When the manager requests to delete a user's account with "<email>" and "<password>"  
-  Then the system prevents deletion if any of those fields are empty  
-  And an error message is displayed: "Email and password are required to delete an account."  
-  And the form remains on the page for correction  
-
-  Examples:  
-    | email                   | password  |  
-    |                         | adminPass |  
-    | client@email.com        |           |  
-
 Scenario Outline: Client tries to delete non-existent account  
   When the client requests to delete an account that does not exist with "<email>" and "<password>"  
   Then the system prevents deletion  
@@ -116,9 +90,7 @@ Scenario Outline: Client tries to delete non-existent account
 
     Examples:  
       | new_email         | new_password | new_address  |  
-      |                   |              |              |  
-      |                   |              |              |  
-      |                   |              |              |  
+      |                   |              |              | 
 
 
  
