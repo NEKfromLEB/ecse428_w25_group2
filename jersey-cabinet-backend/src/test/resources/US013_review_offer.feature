@@ -2,7 +2,7 @@ Feature: Review Offer
 
 As a Customer, 
 I want to be able to accept or reject an offer that has been put down for my jersey after its authentification
-So that the jersey can be successfully listed.
+So that I can communicate my decision regarding the offer.
 
 Background:
     Given the following offer exists in the system
