@@ -93,7 +93,7 @@ public class OfferService {
         return offer;
     }
 
-    public void removeOffer(int jerseyId, int employeeId){
+    public Offer counterOffer(int jerseyId, int employeeId, int price){
         Jersey jersey = jerseyRepository.findById(jerseyId)
                 .orElseThrow(() -> new IllegalArgumentException("Jersey not found"));
 
@@ -103,7 +103,10 @@ public class OfferService {
         Offer.OfferKey key = new Offer.OfferKey(jersey, employee);
         Offer offer = offerRepository.findOfferByKey(key);
 
-        offerRepository.delete(offer);
+        offer.setOfferState(OfferState.Pending);
+        offer.setPrice(price);
+
+        return offerRepository.save(offer);
     }
 }
 
