@@ -3,6 +3,7 @@ package ca.mcgill.ecse428.jerseycabinet.service;
 import ca.mcgill.ecse428.jerseycabinet.dao.JerseyRepository;
 import ca.mcgill.ecse428.jerseycabinet.dto.Jersey.JerseyListingDTO;
 import ca.mcgill.ecse428.jerseycabinet.model.Jersey;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,6 +51,9 @@ public class ListJerseyService {
 
     @Transactional
     public Jersey listJerseyForSale(int id) {
-        return updateJerseyRequestState(id, Jersey.RequestState.Listed);
+        Jersey jersey = jerseyRepository.findJerseyById(id);
+        jersey.setRequestState(Jersey.RequestState.Listed);
+
+        return jerseyRepository.save(jersey);
     }
 }
