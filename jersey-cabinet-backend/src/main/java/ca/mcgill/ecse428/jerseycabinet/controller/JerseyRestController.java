@@ -54,4 +54,5 @@ public class JerseyRestController {
         jersey = jerseyService.updateJerseyRequestState(id, Jersey.RequestState.Listed);
         return ResponseEntity.ok(jersey);
     }
+
 }

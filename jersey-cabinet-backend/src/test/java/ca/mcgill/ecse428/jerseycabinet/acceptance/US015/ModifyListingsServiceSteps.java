@@ -68,26 +68,26 @@ public class ModifyListingsServiceSteps {
     @When("I modify a {string} with {string}")
     public void i_modify_a_with(String field, String info) throws Exception{
         if (field.equals("description")){
-            listService.modifyDescriptionById(this.id, info);
+            listService.modifyById(this.id,info,jersey1.getBrand(),jersey1.getSport(),jersey1.getColor(),jersey1.getJerseyImage(),jersey1.getSalePrice(),jersey1.getProofOfAuthenticationImage());
             this.jersey2 = new Jersey(RequestState.Listed,info,"Nike","soccer","black","google", "www.drive.com", 65,customer);
         }else if (field.equals("brand")){
-            listService.modifyBrandById(this.id, info);
+            listService.modifyById(this.id,jersey1.getDescription(),info,jersey1.getSport(),jersey1.getColor(),jersey1.getJerseyImage(),jersey1.getSalePrice(),jersey1.getProofOfAuthenticationImage());
             this.jersey2 = new Jersey(RequestState.Listed,"This is a jersey.",info,"soccer","black","google", "www.drive.com", 65,customer);
         }else if(field.equals("sport")){
-            listService.modifySportById(this.id, info);
+            listService.modifyById(this.id,jersey1.getDescription(),jersey1.getBrand(),info,jersey1.getColor(),jersey1.getJerseyImage(),jersey1.getSalePrice(),jersey1.getProofOfAuthenticationImage());
             this.jersey2 = new Jersey(jersey1.getRequestState(),jersey1.getDescription(),jersey1.getBrand(),info,jersey1.getColor(),jersey1.getJerseyImage(),jersey1.getProofOfAuthenticationImage(),jersey1.getSalePrice(),customer);
         }
         else if (field.equals("color")){
-            listService.modifyColourById(this.id, info);
+            listService.modifyById(this.id,jersey1.getDescription(),jersey1.getBrand(),jersey1.getSport(),info,jersey1.getJerseyImage(),jersey1.getSalePrice(),jersey1.getProofOfAuthenticationImage());
             this.jersey2 = new Jersey(jersey1.getRequestState(),jersey1.getDescription(),jersey1.getBrand(),jersey1.getSport(),info,jersey1.getJerseyImage(),jersey1.getProofOfAuthenticationImage(),jersey1.getSalePrice(),customer);
         }else if (field.equals("jerseyImage")){
-            listService.modifyImageById(this.id, info);
+            listService.modifyById(this.id,jersey1.getDescription(),jersey1.getBrand(),jersey1.getSport(),jersey1.getColor(),info,jersey1.getSalePrice(),jersey1.getProofOfAuthenticationImage());
             this.jersey2 = new Jersey(jersey1.getRequestState(),jersey1.getDescription(),jersey1.getBrand(),jersey1.getSport(),jersey1.getColor(),info,jersey1.getProofOfAuthenticationImage(),jersey1.getSalePrice(),customer);
         }else if (field.equals("proofOfAuthenticationImage")){
-            listService.modifyAuthenById(this.id, info);
+            listService.modifyById(this.id,jersey1.getDescription(),jersey1.getBrand(),jersey1.getSport(),jersey1.getColor(),jersey1.getJerseyImage(),jersey1.getSalePrice(),info);
             this.jersey2 = new Jersey(jersey1.getRequestState(),jersey1.getDescription(),jersey1.getBrand(),jersey1.getSport(),jersey1.getColor(),jersey1.getJerseyImage(),info,jersey1.getSalePrice(),customer);
         }else if (field.equals("salePrice")){
-            listService.modifyPriceById(this.id, Double.parseDouble(info));
+            listService.modifyById(this.id,jersey1.getDescription(),jersey1.getBrand(),jersey1.getSport(),jersey1.getColor(),jersey1.getJerseyImage(),Double.parseDouble(info),jersey1.getProofOfAuthenticationImage());
             this.jersey2 = new Jersey(jersey1.getRequestState(),jersey1.getDescription(),jersey1.getBrand(),jersey1.getSport(),jersey1.getColor(),jersey1.getJerseyImage(),jersey1.getProofOfAuthenticationImage(),Double.parseDouble(info),customer);
         }
     }
@@ -137,7 +137,7 @@ public class ModifyListingsServiceSteps {
     @When("I try to modify its description to {string}")
     public void i_try_to_modify_its_description_to(String string){
         try {
-            listService.modifyDescriptionById(this.id, string);
+            listService.modifyById(this.id, string, jersey1.getBrand(),jersey1.getSport(),jersey1.getColor(),jersey1.getJerseyImage(),jersey1.getSalePrice(),jersey1.getProofOfAuthenticationImage());
           } catch (Exception e) {
             this.prev_exception = e;
           }
