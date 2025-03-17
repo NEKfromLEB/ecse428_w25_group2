@@ -108,6 +108,10 @@ public class OfferService {
 
     @Transactional
     public Offer counterOffer(int jerseyId, int employeeId, int price){
+        if (price < 0) {
+            throw new IllegalArgumentException("Please enter a non-negative offer amount.");
+        }
+
         Jersey jersey = jerseyRepository.findById(jerseyId)
                 .orElseThrow(() -> new IllegalArgumentException("Jersey not found"));
 
@@ -116,6 +120,10 @@ public class OfferService {
         
         Offer.OfferKey key = new Offer.OfferKey(jersey, employee);
         Offer offer = offerRepository.findOfferByKey(key);
+
+        if (offer.getOfferState() == OfferState.Accepted){
+            throw new IllegalArgumentException("Accepted offers cannot be modified.");
+        }
 
         offer.setOfferState(OfferState.Pending);
         offer.setPrice(price);
