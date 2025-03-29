@@ -1,4 +1,4 @@
-package ca.mcgill.ecse428.jerseycabinet.acceptance.US019;
+package ca.mcgill.ecse428.jerseycabinet.acceptance.US021;
 
 
 import ca.mcgill.ecse428.jerseycabinet.model.Jersey;
