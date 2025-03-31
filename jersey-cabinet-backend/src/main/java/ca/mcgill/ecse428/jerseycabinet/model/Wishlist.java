@@ -1,8 +1,11 @@
 package ca.mcgill.ecse428.jerseycabinet.model;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -21,11 +24,19 @@ public class Wishlist
 
   //Wishlist Associations
   @OneToOne
+  @OnDelete(action = OnDeleteAction.CASCADE)
   private Customer customer;
 
   //------------------------
   // CONSTRUCTOR
   //------------------------
+
+  // DELETE DELETE DELETE
+  public Wishlist()
+  {
+    this.keywords = null;
+    this.customer = null;
+  }
 
   public Wishlist(String aKeywords, Customer aCustomer)
   {

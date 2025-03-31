@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ca.mcgill.ecse428.jerseycabinet.dao.JerseyRepository;
+import ca.mcgill.ecse428.jerseycabinet.dao.WishlistRepository;
 import ca.mcgill.ecse428.jerseycabinet.model.Jersey;
 import ca.mcgill.ecse428.jerseycabinet.model.Jersey.RequestState;
 import jakarta.transaction.Transactional;
@@ -13,6 +14,8 @@ public class CreateAuthentificationFormService {
 
     @Autowired
     private JerseyRepository jerseyRepository;
+    @Autowired
+    private WishlistRepository wishlistRepository;
 
     @Transactional
     public Jersey createJerseyForAuthentification(String brand, String sport, String description, String color, String proof){
