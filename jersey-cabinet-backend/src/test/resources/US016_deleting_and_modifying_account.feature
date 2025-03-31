@@ -27,8 +27,7 @@ Feature: Modify/Delete Accounts of users
       | namir@store.com      | Secure99      |  
       | habib@shop.com       | Pass12        |  
 
-  Scenario Outline: Customer deletes their own account  
-    Given the customer or manager requests deletion  
+  Scenario Outline: Customer deletes their own account 
     When they enter their email "<email>" and password "<password>"  
     And they confirm account deletion  
     Then the system permanently deletes their account  

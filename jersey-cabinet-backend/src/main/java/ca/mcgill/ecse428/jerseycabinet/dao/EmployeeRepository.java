@@ -5,4 +5,6 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface EmployeeRepository extends CrudRepository<Employee, Integer> {
     public Employee findEmployeeById(int id);
+
+    public Employee findByEmail(String email);
 }

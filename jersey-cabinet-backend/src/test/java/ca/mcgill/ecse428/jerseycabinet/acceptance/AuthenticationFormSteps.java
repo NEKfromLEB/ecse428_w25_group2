@@ -14,10 +14,8 @@ import io.cucumber.java.After;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.cucumber.spring.CucumberContextConfiguration;
 import ca.mcgill.ecse428.jerseycabinet.service.CreateAuthentificationFormService;
 
-@CucumberContextConfiguration
 @SpringBootTest
 public class AuthenticationFormSteps {
 
