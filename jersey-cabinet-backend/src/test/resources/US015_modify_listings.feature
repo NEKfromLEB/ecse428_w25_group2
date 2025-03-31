@@ -10,7 +10,7 @@ Background:
         | requestState| description       | brand | sport      | color | jerseyImage | proofOfAuthenticationImage  | SalePrice | Customer
         | Listed      | This is a jersey. | Nike  | soccer     | black | google      | www.drive.com             |    65     | "tee@gmail.com"
 
-Scenario Outline: Successfully modify a listing (Normal Flow)
+Scenario Outline: US015-Successfully modify a listing (Normal Flow)
     When I modify a "<field>" with "<new_information>"
     Then the listing is updated to reflect the change 
 
@@ -27,17 +27,17 @@ Scenario Outline: Successfully modify a listing (Normal Flow)
 
 
 
-Scenario: Successfully delete a jersey (Normal Flow)
+Scenario: US015-Successfully delete a jersey (Normal Flow)
     When I request to delete the jersey I've selected
     Then the jersey is deleted
 
-Scenario: Unsuccessfully try to delete a jersey that is not listed (Error Flow)
+Scenario: US015-Unsuccessfully try to delete a jersey that is not listed (Error Flow)
     Given the jersey has been bought
     When I try to delete it
     Then the system warns me that I cannot
     And no changes are made
 
-Scenario: Unsuccessfully try to modify a jersey that is not listed (Error Flow)
+Scenario: US015-Unsuccessfully try to modify a jersey that is not listed (Error Flow)
     Given the jersey has been bought
     When I try to modify its description to "jerseying"
     Then the system warns me that I cannot
