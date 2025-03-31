@@ -1,80 +1,88 @@
 package ca.mcgill.ecse428.jerseycabinet.service;
 
-import org.springframework.stereotype.Service;
+import java.sql.Date;
 
-import ca.mcgill.ecse428.jerseycabinet.model.Jersey;
-import ca.mcgill.ecse428.jerseycabinet.model.Jersey.RequestState;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import ca.mcgill.ecse428.jerseycabinet.dao.PaymentMethodRepository;
+import ca.mcgill.ecse428.jerseycabinet.model.PaymentMethod;
 import jakarta.transaction.Transactional;
 
 @Service
 public class ModifyPaymentService {
+    @Autowired
+    private PaymentMethodRepository PaymentMethodRepo;
     @Transactional
-    public Jersey modifyAddressById(int id, String desc) throws Exception{
-        Jersey j = jerseyRepo.findJerseyById(id);
+    public void deleteCardById(int id) throws Exception{
+        PaymentMethod j = PaymentMethodRepo.findPaymentMethodById(id);
         if (j == null){
-            throw new Exception("There is no jersey with ID" + id);
-        }
-        if(j.getRequestState().equals(RequestState.Listed)){
-            j.setDescription(desc);
+            throw new Exception("There is no PaymentMethod with ID" + id);
         }else{
-            throw new Exception("You cannot modify a jersey that is not listed");
+            PaymentMethodRepo.delete(j);
         }
-        return jerseyRepo.save(j);
     }
 
     @Transactional
-    public Jersey modifyHolderById(int id, String desc) throws Exception{
-        Jersey j = jerseyRepo.findJerseyById(id);
+    public PaymentMethod modifyAddressById(int id, String desc) throws Exception{
+        PaymentMethod j = PaymentMethodRepo.findPaymentMethodById(id);
         if (j == null){
-            throw new Exception("There is no jersey with ID" + id);
+            throw new Exception("There is no PaymentMethod with ID" + id);
         }
-        if(j.getRequestState().equals(RequestState.Listed)){
-            j.setDescription(desc);
+        if(desc==""){
+            throw new Exception("Card information is invalid");
         }else{
-            throw new Exception("You cannot modify a jersey that is not listed");
-        }
-        return jerseyRepo.save(j);
+            j.setBillingAddress(desc);
+        }   
+        return PaymentMethodRepo.save(j);
     }
 
     @Transactional
-    public Jersey modifyNumberById(int id, String desc) throws Exception{
-        Jersey j = jerseyRepo.findJerseyById(id);
+    public PaymentMethod modifyHolderById(int id, String desc) throws Exception{
+        PaymentMethod j = PaymentMethodRepo.findPaymentMethodById(id);
         if (j == null){
-            throw new Exception("There is no jersey with ID" + id);
+            throw new Exception("There is no PaymentMethod with ID" + id);
         }
-        if(j.getRequestState().equals(RequestState.Listed)){
-            j.setDescription(desc);
+        if(desc==""){
+            throw new Exception("Card information is invalid");
         }else{
-            throw new Exception("You cannot modify a jersey that is not listed");
-        }
-        return jerseyRepo.save(j);
+        j.setCardName(desc);}
+        return PaymentMethodRepo.save(j);
     }
 
     @Transactional
-    public Jersey modifyCVVById(int id, String desc) throws Exception{
-        Jersey j = jerseyRepo.findJerseyById(id);
+    public PaymentMethod modifyNumberById(int id, String desc) throws Exception{
+        PaymentMethod j = PaymentMethodRepo.findPaymentMethodById(id);
         if (j == null){
-            throw new Exception("There is no jersey with ID" + id);
-        }
-        if(j.getRequestState().equals(RequestState.Listed)){
-            j.setDescription(desc);
+            throw new Exception("There is no PaymentMethod with ID" + id);
+        }if(desc==""){
+            throw new Exception("Card information is invalid");
         }else{
-            throw new Exception("You cannot modify a jersey that is not listed");
-        }
-        return jerseyRepo.save(j);
+        j.setCardNumber(desc);}
+        return PaymentMethodRepo.save(j);
     }
 
     @Transactional
-    public Jersey modifyExpiryById(int id, String desc) throws Exception{
-        Jersey j = jerseyRepo.findJerseyById(id);
+    public PaymentMethod modifyCVVById(int id, String desc) throws Exception{
+        PaymentMethod j = PaymentMethodRepo.findPaymentMethodById(id);
         if (j == null){
-            throw new Exception("There is no jersey with ID" + id);
-        }
-        if(j.getRequestState().equals(RequestState.Listed)){
-            j.setDescription(desc);
+            throw new Exception("There is no PaymentMethod with ID" + id);
+        }if(desc==""){
+            throw new Exception("Card information is invalid");
         }else{
-            throw new Exception("You cannot modify a jersey that is not listed");
-        }
-        return jerseyRepo.save(j);
+        j.setCardCVV(desc);}
+        return PaymentMethodRepo.save(j);
+    }
+
+    @Transactional
+    public PaymentMethod modifyExpiryById(int id, String desc) throws Exception{
+        PaymentMethod j = PaymentMethodRepo.findPaymentMethodById(id);
+        if (j == null){
+            throw new Exception("There is no PaymentMethod with ID" + id);
+        }if(desc==""){
+            throw new Exception("Card information is invalid");
+        }else{
+        Date date = Date.valueOf(desc);    
+        j.setCardExpiryDate(date);}
+        return PaymentMethodRepo.save(j);
     }
 }

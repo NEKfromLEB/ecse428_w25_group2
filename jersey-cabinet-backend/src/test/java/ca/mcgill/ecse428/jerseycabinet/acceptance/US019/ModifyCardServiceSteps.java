@@ -13,7 +13,6 @@ import ca.mcgill.ecse428.jerseycabinet.dao.PaymentMethodRepository;
 import ca.mcgill.ecse428.jerseycabinet.model.Customer;
 import ca.mcgill.ecse428.jerseycabinet.model.PaymentMethod;
 import ca.mcgill.ecse428.jerseycabinet.service.ModifyPaymentService;
-import ca.mcgill.ecse428.jerseycabinet.service.PaymentService;
 import io.cucumber.java.After;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
@@ -40,8 +39,13 @@ public class ModifyCardServiceSteps {
 
      @After
     public void cleanup(){
-        paymentRepo.delete(this.paymentMethod1);
-        paymentRepo.delete(this.paymentMethod2);
+        if (paymentMethod1 != null){
+            paymentRepo.delete(this.paymentMethod1);
+        }
+        if (paymentMethod2 !=null){
+            paymentRepo.delete(this.paymentMethod2);
+        }
+        
         customerRepo.delete(this.customer);
         this.prev_exception = null;
     }
@@ -54,7 +58,7 @@ public class ModifyCardServiceSteps {
 
     @And("the following card is registered to me")
     public void the_following_card_is_registered_to_me(io.cucumber.datatable.DataTable dataTable){
-        Date date = Date.valueOf("03/27");
+        Date date = Date.valueOf("2025-03-31");
         this.paymentMethod1 = new PaymentMethod("100 Main Street", "Namir Habib", "000000000000001", "122", date, this.customer);
         paymentRepo.save(this.paymentMethod1);
         this.id = this.paymentMethod1.getId();
@@ -84,12 +88,11 @@ public class ModifyCardServiceSteps {
 
     @Then("the card information is updated to reflect the change.")
     public void the_card_information_is_updated_to_reflect_the_change(){
-        assertEquals(paymentMethod2.getRequestState(), jerseyRepo.findJerseyById(this.id).getRequestState());
-        assertEquals(jersey2.getDescription(), jerseyRepo.findJerseyById(this.id).getDescription());
-        assertEquals(jersey2.getBrand(), jerseyRepo.findJerseyById(this.id).getBrand());
-        assertEquals(jersey2.getSport(), jerseyRepo.findJerseyById(this.id).getSport());
-        assertEquals(jersey2.getColor(), jerseyRepo.findJerseyById(this.id).getColor());
-        assertEquals(jersey2.getJerseyImage(), jerseyRepo.findJerseyById(this.id).getJerseyImage());
+        assertEquals(paymentMethod2.getBillingAddress(), paymentRepo.findPaymentMethodById(this.id).getBillingAddress());
+        assertEquals(paymentMethod2.getCardName(), paymentRepo.findPaymentMethodById(this.id).getCardName());
+        assertEquals(paymentMethod2.getCardNumber(), paymentRepo.findPaymentMethodById(this.id).getCardNumber());
+        assertEquals(paymentMethod2.getCardCVV(), paymentRepo.findPaymentMethodById(this.id).getCardCVV());
+        assertEquals(paymentMethod2.getCardExpiryDate(), paymentRepo.findPaymentMethodById(this.id).getCardExpiryDate());
     }
 
 
@@ -106,9 +109,19 @@ public class ModifyCardServiceSteps {
 
 
     @When("I leave a {string} blank")
-    public void i_leave_blank(){
+    public void i_leave_blank(String field){
         try {
-            paymentService.deleteJerseyById(this.id);
+            if (field.equals("billingAddress")){
+                paymentService.modifyAddressById(this.id, "");
+            }else if (field.equals("cardHolderName")){
+                paymentService.modifyHolderById(this.id, "");
+            }else if(field.equals("cardNumber")){
+                paymentService.modifyNumberById(this.id, "");
+            }else if (field.equals("cardCVV")){
+                paymentService.modifyCVVById(this.id, "");
+            }else if (field.equals("cardExpiryDate")){
+                paymentService.modifyExpiryById(this.id, "");
+            }
           } catch (Exception e) {
             this.prev_exception = e;
           }
@@ -116,9 +129,9 @@ public class ModifyCardServiceSteps {
 
 
     @When("I enter an {string}")
-    public void i_enter_an(String string){
+    public void i_enter_an(String date){
         try {
-            paymentService.modifyDescriptionById(this.id, string);
+            paymentService.modifyExpiryById(this.id, date);
           } catch (Exception e) {
             this.prev_exception = e;
           }
@@ -130,9 +143,15 @@ public class ModifyCardServiceSteps {
         assertNotNull(this.prev_exception);
     }
 
-    @And ("the form is not updated")
+    @And ("the form is not updated.")
     public void form_is_not_updated(){
-
+        Date date = Date.valueOf("2025-03-31");
+        this.paymentMethod2 = new PaymentMethod("100 Main Street", "Namir Habib", "000000000000001", "122", date, this.customer);
+        assertEquals(paymentMethod2.getBillingAddress(), paymentRepo.findPaymentMethodById(this.id).getBillingAddress());
+        assertEquals(paymentMethod2.getCardName(), paymentRepo.findPaymentMethodById(this.id).getCardName());
+        assertEquals(paymentMethod2.getCardNumber(), paymentRepo.findPaymentMethodById(this.id).getCardNumber());
+        assertEquals(paymentMethod2.getCardCVV(), paymentRepo.findPaymentMethodById(this.id).getCardCVV());
+        assertEquals(paymentMethod2.getCardExpiryDate(), paymentRepo.findPaymentMethodById(this.id).getCardExpiryDate());
     }
 
 }
