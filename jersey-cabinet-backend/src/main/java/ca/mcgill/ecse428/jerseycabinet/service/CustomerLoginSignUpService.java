@@ -4,13 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ca.mcgill.ecse428.jerseycabinet.dao.CustomerRepository;
+import ca.mcgill.ecse428.jerseycabinet.dao.WishlistRepository;
 import ca.mcgill.ecse428.jerseycabinet.model.Customer;
+import ca.mcgill.ecse428.jerseycabinet.model.Wishlist;
 
 @Service
 public class CustomerLoginSignUpService {
 
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private WishlistRepository wishlistRepository;
 
     public Customer registerCustomer(String email, String password, String shippingAddress) {
         if (customerRepository.findCustomerByEmail(email) != null) {
@@ -42,9 +46,19 @@ public class CustomerLoginSignUpService {
             throw new IllegalArgumentException("Email must not contain spaces");
         }
 
+        // altered code to create a wishlist for the new user
         Customer newCustomer = new Customer(email, password, shippingAddress);
-        
-        return customerRepository.save(newCustomer);
+        newCustomer = customerRepository.save(newCustomer);
+
+        try {
+            Wishlist wishlist = new Wishlist(null, newCustomer);
+            wishlistRepository.save(wishlist);
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Failed to create wishlist: " + e.getMessage());
+        }
+
+        return newCustomer;
     }
 
     public Customer loginCustomer(String email, String password) {

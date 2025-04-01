@@ -12,6 +12,7 @@ Background:
     
     And I am logged in as an Employee
 
+
 Scenario Outline: US018: Successfully counter a rejected offer (Normal Flow)
     When I enter a <new_price> for the offer
     And I confirm the update of the offer
