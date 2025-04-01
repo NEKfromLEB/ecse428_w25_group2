@@ -4,15 +4,12 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import ca.mcgill.ecse428.jerseycabinet.dao.JerseyRepository;
 import ca.mcgill.ecse428.jerseycabinet.dto.Jersey.JerseyListingDTO;
 import ca.mcgill.ecse428.jerseycabinet.model.Jersey;
 import ca.mcgill.ecse428.jerseycabinet.model.Customer;
-import ca.mcgill.ecse428.jerseycabinet.model.Employee;
 import ca.mcgill.ecse428.jerseycabinet.service.ListJerseyService;
 
 import io.cucumber.java.Before;
@@ -21,7 +18,6 @@ import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.And;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 @CucumberContextConfiguration

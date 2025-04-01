@@ -5,9 +5,25 @@ Feature: Customer Jersey Order Cancellation
   so that I can change my mind about a purchase without penalty.
 
   Background:
-    Given the store has a jersey order cancellation system
-    And a customer account exists in the system
-    And the customer has purchased jerseys
+    Given the jersey cabinet system is running
+    And the following jerseys exist in the system:
+      | id   | brand        | sport      | color  | price  | request_state |
+      | 1001 | Adidas       | Hockey     | Red    | 120.00 | Bought        |
+      | 1002 | Nike         | Football   | Blue   | 130.00 | Bought        |
+      | 1003 | Puma         | Basketball | Green  | 150.00 | Bought        |
+      | 1004 | Reebok       | Baseball   | Yellow | 200.00 | Bought        |
+      | 1005 | Under Armour | Soccer     | Black  | 110.00 | Listed        |
+    And the following customers exist in the system:
+      | id | name           | email                |
+      | 1  | John Doe       | john.doe@example.com |
+      | 2  | Jane Smith     | jane@example.com     |
+    And the following orders exist in the system:
+      | order_id | jersey_id | customer_id | purchase_time             |
+      | 1        | 1001      | 1           | 2023-10-12T10:00:00.000Z  |
+      | 2        | 1002      | 1           | 2023-10-10T10:00:00.000Z  |
+      | 3        | 1003      | 1           | 2023-10-12T10:00:00.000Z  |
+      | 4        | 1004      | 1           | 2023-10-12T10:00:00.000Z  |
+      | 5        | 1005      | 1           | 2023-10-12T10:00:00.000Z  |
 
   Scenario: Customer successfully cancels an order within 24 hours
     Given I am logged in as a customer
