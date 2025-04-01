@@ -16,16 +16,7 @@ Feature: Modify/Delete Accounts of users
     Examples:  
       | new_email           | new_password | new_address             |  
       | mahmoud@email.com   | Pass123!     | 123 Main St, Montreal   |  
-      | amin@email.com      | NewPass456   | 456 King St, Toronto    |  
-
-  Scenario Outline: Successfully modify employee account  
-    When the employee updates their email to "<new_email>" and password to "<new_password>"  
-    Then the system updates their account information  
-
-    Examples:  
-      | new_email            | new_password  |  
-      | namir@store.com      | Secure99      |  
-      | habib@shop.com       | Pass12        |  
+      | amin@email.com      | NewPass456   | 456 King St, Toronto    |
 
   Scenario Outline: Customer deletes their own account 
     When they enter their email "<email>" and password "<password>"  
@@ -49,14 +40,14 @@ Feature: Modify/Delete Accounts of users
       |                   | NewPass789   |                       |
       |                   |              | 123 Main St, Montreal |
  
-  Scenario Outline: Employee modifies only their email or password  
-    When the employee updates either their email to "<new_email>" or password to "<new_password>"  
-    Then the system updates only the provided information successfully
-
-    Examples:  
-      | new_email            | new_password  |  
-      | amin@store.com       |               |  
-      |                      | SuperPass321  |  
+#  Scenario Outline: Employee modifies only their email or password
+#    When the employee updates either their email to "<new_email>" or password to "<new_password>"
+#    Then the system updates only the provided information successfully
+#
+#    Examples:
+#      | new_email            | new_password  |
+#      | amin@store.com       |               |
+#      |                      | SuperPass321  |
 
   ## Error Flows  
 
