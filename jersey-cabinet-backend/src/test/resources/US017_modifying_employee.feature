@@ -31,4 +31,4 @@ Scenario: Attempting to Modify a Non-Existent Account (Error Flow)
     Given the employee account does not exist  
     When I try to modify the email to "invalidemail@gmail.com"  
     Then the system displays an error message: "Account not found."  
-    And no changes are made  
+    And no changes are made

@@ -1,5 +1,6 @@
 package ca.mcgill.ecse428.jerseycabinet.dao;
 
+import ca.mcgill.ecse428.jerseycabinet.model.Employee;
 import ca.mcgill.ecse428.jerseycabinet.model.Jersey;
 
 import jakarta.transaction.Transactional;
