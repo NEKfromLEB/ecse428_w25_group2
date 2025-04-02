@@ -15,6 +15,13 @@ import org.junit.runners.Suite;
     RunCucumberTest_11.class,
     RunCucumberTest_12.class,
     RunCucumberTest_15.class,
+    RunCucumberTest_16.class,
+    RunCucumberTest_14.class,
+    RunCucumberTest_13.class,
+    RunCucumberTest_17.class,
+    RunCucumberTest_18.class,
+    RunCucumberTest_19.class,
+    RunCucumberTest_20.class,
     RunCucumberTest_8.class,
     RunCucumberTest_6.class,
     RunCucumberTest_1.class
