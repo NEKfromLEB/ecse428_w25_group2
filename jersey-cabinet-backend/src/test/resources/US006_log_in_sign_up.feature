@@ -1,6 +1,6 @@
 Feature: User Authentication
 
-  Scenario Outline: User successfully creates an account
+  Scenario Outline: US006: User successfully creates an account
     Given the user is on the registration page
     When the user enters a valid "<email>" and "<password>"
     And clicks the Sign Up button
@@ -12,7 +12,7 @@ Feature: User Authentication
       | user@example.com     | Passw0rd!    |
       | testuser@email.com   | Secure123$   |
 
-  Scenario Outline: User fails to create an account due to invalid credentials
+  Scenario Outline: US006: User fails to create an account due to invalid credentials
     Given the user is on the registration page
     When the user enters an invalid "<email>" or "<password>"
     And clicks the Sign Up button
@@ -23,7 +23,7 @@ Feature: User Authentication
       | invalidemail.com | Pass123  |
       | user@domain.com  | short    |
 
-  Scenario Outline: User successfully logs in
+  Scenario Outline: US006: User successfully logs in
     Given the user has an existing account with "<email>" and "<password>"
     And is on the login page
     When the user enters a valid "<email>" and "<password>"
@@ -35,7 +35,7 @@ Feature: User Authentication
       | user@example.com     | Passw0rd!  |
       | testuser@email.com   | Secure123$ |
 
-  Scenario Outline: User fails to log in with incorrect credentials
+  Scenario Outline: US006: User fails to log in with incorrect credentials
     Given the user is on the login page
     When the user enters an incorrect "<email>" or "<password>"
     And clicks the Login button
@@ -46,7 +46,7 @@ Feature: User Authentication
       | user@example.com     | WrongPass   |
       | unknown@email.com    | Passw0rd!   |
 
-  Scenario: User tries to log in with an unregistered email
+  Scenario: US006: User tries to log in with an unregistered email
     Given the user is on the login page
     When the user enters an unregistered email newuser@example.com
     And clicks the Login button

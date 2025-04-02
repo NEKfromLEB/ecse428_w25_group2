@@ -11,7 +11,7 @@ Background:
 
     And I am logged in as a user
 
-Scenario Outline: Successfully search for listings through the description (Normal Flow)
+Scenario Outline: US003: Successfully search for listings through the description (Normal Flow)
     When the user searches for "<search_query>"
     Then a list of "<listings>" shall be displayed where each listing's description contains the search query as a substring
 
@@ -20,7 +20,7 @@ Scenario Outline: Successfully search for listings through the description (Norm
         | Chicago      | 1992 Chicago Bulls                   |
         | Home         | 2002 Brazil Home, 2006 AC Milan Home |
 
-Scenario Outline: Successfully search for listings of a specific sport (Alternate Flow)
+Scenario Outline: US003: Successfully search for listings of a specific sport (Alternate Flow)
     When the user searches for listings indicating a "<sport>"
     Then a list of "<listings>" of "<sport>" shall be displayed
 
@@ -28,7 +28,7 @@ Scenario Outline: Successfully search for listings of a specific sport (Alternat
         | sport    | listings                             |
         | football | 1984 Las Vegas Raiders               |
 
-Scenario Outline: Unsuccessfully search for listings because query does not match any listing (Error Flow)
+Scenario Outline: US003: Unsuccessfully search for listings because query does not match any listing (Error Flow)
     Given no listings match "<search_query>"
     When the user searches for "<search_query>"
     Then "<listings>" is empty

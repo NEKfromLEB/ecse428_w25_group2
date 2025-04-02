@@ -3,7 +3,7 @@ Feature: Review Order List
   I want to see a list of all orders and their status
   So that I can ensure their completion
 
-  Scenario: View all orders (Normal flow)
+  Scenario: US004: View all orders (Normal flow)
    Given the following orders exist in the system
      | Customer Email | Jersey Description | Order Date | Status      |
      | mohamed@gmail.com         | Bulls     | 2025-02-21 | ToBeShipped |
@@ -16,7 +16,7 @@ Feature: Review Order List
       | tia@gmail.com  | Lakers       | 2025-02-22 | Shipped     |
       |moe@gmail.com  | Byers       | 2025-02-23 | Delivered   |
 
-  Scenario: Filter orders by status
+  Scenario: US004: Filter orders by status
     Given there are certain orders in the system:
       | Customer Email    | Jersey Description | Order Date | Status      |
       | mohamed@gmail.com | Bulls              | 2025-02-21 | ToBeShipped |
@@ -27,7 +27,7 @@ Feature: Review Order List
       | Customer Email    | Jersey Description | Order Date | Status  |
       | tia@gmail.com     | Lakers             | 2025-02-22 | Shipped |
 
-  Scenario Outline: Search for an order (Normal flow)
+  Scenario Outline: US004: Search for an order (Normal flow)
     Given there are certain orders in the system:
       | Customer Email    | Jersey Description | Order Date | Status      |
       | mohamed@gmail.com | Bulls              | 2025-02-21 | ToBeShipped |
@@ -45,7 +45,7 @@ Feature: Review Order List
 
 
 
-  Scenario Outline: Search for an order that does not exist (Exception flow)
+  Scenario Outline: US004: Search for an order that does not exist (Exception flow)
     Given there are certain orders in the system:
       | Customer Email    | Jersey Description | Order Date | Status      |
       | mohamed@gmail.com | Bulls              | 2025-02-21 | ToBeShipped |
@@ -63,7 +63,7 @@ Feature: Review Order List
 
 
 
-  Scenario Outline: Mark an order as delivered (Normal flow)
+  Scenario Outline: US004: Mark an order as delivered (Normal flow)
     Given there are certain orders in the system:
       | Customer Email    | Jersey Description | Order Date | Status         |
       | john@gmail.com    | Bulls              | 2025-02-20 | ToBeShipped    |

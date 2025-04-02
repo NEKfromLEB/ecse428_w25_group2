@@ -15,28 +15,28 @@ Feature: Manage the cart
   ########################################################################
   # ADDING ITEMS
   ########################################################################
-  Scenario: Successfully add an item to an empty cart
+  Scenario: US005: Successfully add an item to an empty cart
     Given my cart is empty
     And an item "2002 Brazil Home" is available in stock
     When I add "2002 Brazil Home" to my cart
     Then "2002 Brazil Home" should be in my cart
     And the cart should contain 1 item total
 
-  Scenario: Add a second distinct item to a cart
+  Scenario: US005: Add a second distinct item to a cart
     Given my cart contains "2002 Brazil Home"
     And an item "2006 AC Milan Home" is available in stock
     When I add "2006 AC Milan Home" to my cart
     Then the cart should contain "2002 Brazil Home" and "2006 AC Milan Home"
     And the cart should contain 2 item total
 
-  Scenario: Attempt to add an item that is already in the cart
+  Scenario: US005: Attempt to add an item that is already in the cart
     Given my cart contains "2002 Brazil Home"
     When I add "2002 Brazil Home" to my cart
     Then I should see an error message "Item already in cart"
     Then "2002 Brazil Home" should be in my cart
     And the cart should contain 1 item total
 
-  Scenario: Attempt to add an out-of-stock item
+  Scenario: US005: Attempt to add an out-of-stock item
     Given an item "1992 Chicago Bulls" is marked out of stock
     When I add "1992 Chicago Bulls" to my cart
     Then I should see an error message "Item is not for sale"
@@ -46,19 +46,19 @@ Feature: Manage the cart
   ########################################################################
   # REMOVING ITEMS
   ########################################################################
-  Scenario: Successfully remove an item from the cart
+  Scenario: US005: Successfully remove an item from the cart
     Given my cart contains "2002 Brazil Home" and "2006 AC Milan Home"
     When I remove "2002 Brazil Home" from the cart
     Then "2002 Brazil Home" should no longer be in my cart
     Then "2006 AC Milan Home" should be in my cart
     And the cart should contain 1 item total
 
-  Scenario: Remove the last item from the cart, making it empty
+  Scenario: US005: Remove the last item from the cart, making it empty
     Given my cart contains "2006 AC Milan Home"
     When I remove "2006 AC Milan Home" from the cart
     And the cart should contain 0 item total
 
-  Scenario: Attempt to remove an item that is not in the cart
+  Scenario: US005: Attempt to remove an item that is not in the cart
     Given my cart contains "2006 AC Milan Home"
     When I remove "1984 Las Vegas Raiders" from the cart
     Then I should see an error message "Item not found in cart"
@@ -68,13 +68,13 @@ Feature: Manage the cart
   ########################################################################
   # VIEWING THE CART
   ########################################################################
-  Scenario: View a cart containing multiple items
+  Scenario: US005: View a cart containing multiple items
     Given my cart contains "2006 AC Milan Home" and "1984 Las Vegas Raiders"
     When I view my cart
     Then I should see the items "2006 AC Milan Home" and "1984 Las Vegas Raiders"
     And the cart should contain 2 item total
 
-  Scenario: View an empty cart
+  Scenario: US005: View an empty cart
     Given my cart is empty
     When I view my cart
     Then I should see a message "Your cart is empty"
@@ -84,7 +84,7 @@ Feature: Manage the cart
   ########################################################################
   # CLEARING THE CART
   ########################################################################
-  Scenario: Clear the cart containing multiple items
+  Scenario: US005: Clear the cart containing multiple items
     Given my cart contains "2006 AC Milan Home" and "1992 Chicago Bulls"
     When I choose to clear my cart
     And the cart should contain 0 item total
