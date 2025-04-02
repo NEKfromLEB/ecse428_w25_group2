@@ -3,7 +3,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import ca.mcgill.ecse428.jerseycabinet.dao.EmployeeRepository;
 import ca.mcgill.ecse428.jerseycabinet.model.Employee;
 import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ModifyEmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
