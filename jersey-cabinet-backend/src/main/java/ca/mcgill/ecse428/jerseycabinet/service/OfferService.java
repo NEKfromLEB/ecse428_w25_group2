@@ -42,10 +42,10 @@ public class OfferService {
         // 3) Find the Employee
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
-
+        /*
         if (jersey.getRequestState() != RequestState.Unlisted){
             throw new IllegalArgumentException("Invalid jersey state.");
-        }
+        }*/
 
         // 4) Create the Offer
         Offer.OfferKey key = new Offer.OfferKey(jersey, employee);
