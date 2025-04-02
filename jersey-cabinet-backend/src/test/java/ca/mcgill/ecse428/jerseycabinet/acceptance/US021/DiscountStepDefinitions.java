@@ -10,8 +10,11 @@ import io.cucumber.java.en.When;
 import io.cucumber.spring.CucumberContextConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -34,9 +37,8 @@ public class DiscountStepDefinitions {
         for (int i = 1; i < dataTable.size(); i++) {
             List<String> row = dataTable.get(i);
             Jersey jersey = new Jersey();
-            jersey.setId(Integer.parseInt(row.get(0)));
-            jersey.setSport(row.get(1));
-            jersey.setSalePrice(Double.parseDouble(row.get(2)));
+            jersey.setSport(row.get(0));
+            jersey.setSalePrice(Double.parseDouble(row.get(1)));
             jerseyRepository.save(jersey);
         }
     }
@@ -70,46 +72,60 @@ public class DiscountStepDefinitions {
 
     @Then("the sale price of the jerseys in the {string} category should be updated:")
     public void the_sale_price_of_the_jerseys_in_the_category_should_be_updated(String category, List<List<String>> dataTable) {
-        assertTrue(discountApplied);
+        List<Jersey> jerseys = jerseyRepository.findBySport(category);
+        List<Jersey> jerseyList = jerseys.stream().collect(Collectors.toList());
+        assertEquals(dataTable.size() - 1, jerseyList.size());
 
         for (int i = 1; i < dataTable.size(); i++) {
             List<String> row = dataTable.get(i);
-            int id = Integer.parseInt(row.get(0));
-            double expectedPrice = Double.parseDouble(row.get(1));
+            double expectedSalePrice = Double.parseDouble(row.get(0));
 
-            Jersey jersey = jerseyRepository.findJerseyById(id);
-            assertNotNull(jersey);
-
-            double actualPrice = jersey.getSalePrice(); // Get the actual price
-
-            System.out.println("Jersey ID: " + id);
-            System.out.println("Expected Price: " + expectedPrice);
-            System.out.println("Actual Price: " + actualPrice);
-            System.out.flush();
-
-            assertEquals(expectedPrice, actualPrice, 0.01);
+            boolean found = false;
+            for (Jersey jersey : jerseyList) {
+                if (jersey.getSalePrice() == expectedSalePrice) {
+                    found = true;
+                    break;
+                }
+            }
+            assertTrue("Jersey with sale price " + expectedSalePrice + " not found", found);
         }
     }
 
-    @And("the sale price of jerseys in other categories should remain unchanged:")
+    @Then("the sale price of jerseys in other categories should remain unchanged:")
     public void the_sale_price_of_jerseys_in_other_categories_should_remain_unchanged(List<List<String>> dataTable) {
         for (int i = 1; i < dataTable.size(); i++) {
             List<String> row = dataTable.get(i);
-            int id = Integer.parseInt(row.get(0));
-            double expectedPrice = Double.parseDouble(row.get(1));
-            Jersey jersey = jerseyRepository.findJerseyById(id);
-            assertNotNull(jersey);
-            assertEquals(expectedPrice, jersey.getSalePrice(), 0.01);
+            String sport = row.get(0);
+            double expectedSalePrice = Double.parseDouble(row.get(1));
+
+            List<Jersey> jerseys = jerseyRepository.findBySport(sport);
+
+            boolean found = false;
+            for(Jersey jersey : jerseys){
+                if(jersey.getSalePrice() == expectedSalePrice){
+                    found = true;
+                    break;
+                }
+            }
+            assertTrue("Jersey with sport: "+ sport + " and sale price: "+ expectedSalePrice + " not found.", found);
         }
     }
 
     @Then("no jerseys should be updated")
     public void no_jerseys_should_be_updated() {
+        List<Jersey> allJerseys = new ArrayList<>();
+        jerseyRepository.findAll().forEach(allJerseys::add);
+        assertTrue(allJerseys.size() > 0);
         assertFalse(discountApplied);
     }
 
-    @And("an error message {string} should be displayed")
-    public void an_error_message_should_be_displayed(String expectedMessage) {
-        assertEquals(expectedMessage, errorMessage);
+    @Then("an error message {string} should be displayed")
+    public void an_error_message_should_be_displayed(String expectedErrorMessage) {
+        assertEquals(expectedErrorMessage, errorMessage);
+    }
+
+    @TestConfiguration
+    static class TestConfig {
+        // Optional: Add custom beans or configurations here
     }
 }
