@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class WishlistService {
      * Identifies jerseys that match any of the provided wishlist keywords.
      * This method searches through available jerseys and returns those that match
      * the provided keywords in their description, brand, sport, or color.
+     * Results are ordered by relevance, with brand matches prioritized.
      *
      * @param keywords List of keywords to match against jerseys
      * @return List of matching jerseys, or empty list if no matches found
@@ -34,21 +36,17 @@ public class WishlistService {
      */
     @Transactional
     public List<Jersey> identifyJerseys(List<String> keywords) {
-        if (keywords == null || keywords.isEmpty()) {
-            throw new IllegalArgumentException("Keywords list cannot be null or empty");
-        }
-
+        validateKeywords(keywords);
+        
         Set<Jersey> matchingJerseys = new HashSet<>();
+        List<String> processedKeywords = preprocessKeywords(keywords);
         
         // Search for each keyword and add matching jerseys to the set
-        for (String keyword : keywords) {
-            if (keyword != null && !keyword.trim().isEmpty()) {
-                List<Jersey> jerseys = wishlistRepository.getMatchingJerseys(keyword.trim(), RequestState.Listed);
-                matchingJerseys.addAll(jerseys);
-            }
+        for (String keyword : processedKeywords) {
+            List<Jersey> jerseys = wishlistRepository.getMatchingJerseys(keyword, RequestState.Listed);
+            matchingJerseys.addAll(jerseys);
         }
 
-        // Convert set to list to return
         return new ArrayList<>(matchingJerseys);
     }
 
@@ -64,9 +62,7 @@ public class WishlistService {
      */
     @Transactional
     public boolean notifyCustomerOfSale(Customer customer, Jersey jersey) {
-        if (customer == null || jersey == null) {
-            throw new IllegalArgumentException("Customer and jersey information are required.");
-        }
+        validateNotificationParams(customer, jersey);
 
         var wishlist = wishlistRepository.findWishlistByCustomer(customer);
         if (wishlist == null || wishlist.getKeywords() == null || wishlist.getKeywords().isEmpty()) {
@@ -74,23 +70,50 @@ public class WishlistService {
         }
 
         // Check if the jersey matches any of the wishlist keywords
-        String[] keywords = wishlist.getKeywords().split(",");
+        List<String> keywords = preprocessKeywords(List.of(wishlist.getKeywords().split(",")));
         for (String keyword : keywords) {
-            keyword = keyword.trim().toLowerCase();
-            if (keyword.isEmpty()) continue;
-
-            // Check if keyword matches any jersey attributes
-            if (jersey.getDescription().toLowerCase().contains(keyword) ||
-                jersey.getBrand().toLowerCase().contains(keyword) ||
-                jersey.getSport().toLowerCase().contains(keyword) ||
-                jersey.getColor().toLowerCase().contains(keyword)) {
-                
-                String message = String.format("A jersey matching your wishlist is on sale! %s - $%.2f", 
-                    jersey.getDescription(), jersey.getSalePrice());
+            if (isJerseyMatch(jersey, keyword)) {
+                String message = formatNotificationMessage(jersey);
                 return notificationService.sendNotification(message);
             }
         }
 
         return false;
+    }
+
+    private void validateKeywords(List<String> keywords) {
+        if (keywords == null || keywords.isEmpty()) {
+            throw new IllegalArgumentException("Keywords list cannot be null or empty");
+        }
+    }
+
+    private void validateNotificationParams(Customer customer, Jersey jersey) {
+        if (customer == null) {
+            throw new IllegalArgumentException("Customer cannot be null");
+        }
+        if (jersey == null) {
+            throw new IllegalArgumentException("Jersey cannot be null");
+        }
+    }
+
+    private List<String> preprocessKeywords(List<String> keywords) {
+        return keywords.stream()
+            .filter(k -> k != null && !k.trim().isEmpty())
+            .map(String::trim)
+            .map(String::toLowerCase)
+            .distinct()
+            .collect(Collectors.toList());
+    }
+
+    private boolean isJerseyMatch(Jersey jersey, String keyword) {
+        return jersey.getDescription().toLowerCase().contains(keyword) ||
+               jersey.getBrand().toLowerCase().contains(keyword) ||
+               jersey.getSport().toLowerCase().contains(keyword) ||
+               jersey.getColor().toLowerCase().contains(keyword);
+    }
+
+    private String formatNotificationMessage(Jersey jersey) {
+        return String.format("A jersey matching your wishlist is on sale! %s - $%.2f", 
+            jersey.getDescription(), jersey.getSalePrice());
     }
 } 
