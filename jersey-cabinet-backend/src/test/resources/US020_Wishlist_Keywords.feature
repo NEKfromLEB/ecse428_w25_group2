@@ -14,24 +14,61 @@ Feature: Obtain Matching Jersey List
     When the customer requests to view jerseys on sale matching their wishlist
     Then the system displays a list of jerseys matching "<keyword>"
     And each jersey entry shows its sale price, availability, and sale date
+    And the system returns results in relevance order for "<keyword>"
 
     Examples:
-      | keyword |
-      | Nike    |
-      | Adidas  |
-      | Puma    |
-      | Reebok  |
+      | keyword     |
+      | Nike       |
+      | Adidas     |
+      | Puma       |
+      | Reebok     |
 
   Scenario Outline: Successfully retrieve jerseys with multiple keywords
     Given the customer is logged in
     And the customer's wishlist contains the keywords "<keywords>"
     When the customer requests to view jerseys on sale matching their wishlist
     Then the system displays jerseys that match any of the keywords in "<keywords>"
+    And the system handles duplicate keywords correctly
 
     Examples:
       | keywords           |
       | Nike, Basketball   |
       | Adidas, Soccer    |
+
+  Scenario Outline: Search by specific attributes
+    Given the customer is logged in
+    And the customer's wishlist contains the keyword "<attribute_value>"
+    When the customer requests to view jerseys on sale matching their wishlist
+    Then the system finds jerseys with <attribute_type> "<attribute_value>"
+
+    Examples:
+      | attribute_type | attribute_value |
+      | color         | Red             |
+      | sport         | Basketball      |
+      | color         | Blue            |
+      | sport         | Soccer          |
+
+  Scenario Outline: Handle special characters and case variations
+    Given the customer is logged in
+    And the customer's wishlist contains special characters "<keyword>"
+    When the customer requests to view jerseys on sale matching their wishlist
+    Then the system handles special characters in the results
+
+    Examples:
+      | keyword           |
+      | Nike*Star         |
+      | Nike & Adidas     |
+
+  Scenario Outline: Case insensitive matching
+    Given the customer is logged in
+    And the customer's wishlist contains case variations "<keyword>"
+    When the customer requests to view jerseys on sale matching their wishlist
+    Then the system displays a list of jerseys matching "<expected>"
+
+    Examples:
+      | keyword    | expected  |
+      | NIKE      | Nike      |
+      | adidas    | Adidas    |
 
   Scenario Outline: No matching jerseys found
     Given the customer is logged in

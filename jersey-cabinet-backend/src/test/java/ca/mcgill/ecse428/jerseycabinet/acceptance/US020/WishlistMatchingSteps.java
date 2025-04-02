@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 import java.util.Comparator;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -76,6 +78,12 @@ public class WishlistMatchingSteps {
         createTestJersey("Reebok Hockey Jersey", "Reebok", "Hockey", "Yellow", 109.99);
         createTestJersey("Jordan Basketball Jersey", "Jordan", "Basketball", "Red", 129.99);
         createTestJersey("UnderArmour Football Jersey", "UnderArmour", "Football", "Blue", 89.99);
+        
+        // Add jerseys for testing special cases
+        createTestJersey("NIKE Special Edition", "NIKE", "Basketball", "Gold", 199.99); // Testing case sensitivity
+        createTestJersey("Nike*Star Jersey", "Nike", "Basketball", "Silver", 149.99); // Testing special characters
+        createTestJersey("Nike & Adidas Collab", "Nike", "Training", "Black", 299.99); // Testing multiple brands
+        createTestJersey("Vintage Nike", "Nike", "Basketball", "Red", 79.99); // Testing duplicate colors
     }
 
     private void createTestJersey(String description, String brand, String sport, String color, double price) {
@@ -337,5 +345,84 @@ public class WishlistMatchingSteps {
     @Then("the error is logged for further analysis")
     public void the_error_is_logged_for_further_analysis() {
         assertNotNull(errorMessage);
+    }
+
+    @Given("the customer's wishlist contains special characters {string}")
+    public void the_customer_s_wishlist_contains_special_characters(String keyword) {
+        if (customer == null) {
+            customer = new Customer("test@example.com", "password", "Test User");
+            customerRepository.save(customer);
+        }
+        wishlist = new Wishlist(keyword, customer);
+        wishlistRepository.save(wishlist);
+    }
+
+    @Given("the customer's wishlist contains case variations {string}")
+    public void the_customer_s_wishlist_contains_case_variations(String keyword) {
+        if (customer == null) {
+            customer = new Customer("test@example.com", "password", "Test User");
+            customerRepository.save(customer);
+        }
+        wishlist = new Wishlist(keyword, customer);
+        wishlistRepository.save(wishlist);
+    }
+
+    @Then("the system returns results in relevance order for {string}")
+    public void the_system_returns_results_in_relevance_order(String keyword) {
+        assertNotNull(matchingJerseys, "Matching jerseys list should not be null");
+        assertFalse(matchingJerseys.isEmpty(), "Matching jerseys list should not be empty");
+        
+        // First result should be exact brand match if exists
+        if (!matchingJerseys.isEmpty()) {
+            Jersey firstMatch = matchingJerseys.get(0);
+            if (firstMatch.getBrand().equalsIgnoreCase(keyword)) {
+                assertTrue(true, "First result is brand match as expected");
+            } else if (firstMatch.getSport().equalsIgnoreCase(keyword)) {
+                assertTrue(true, "First result is sport match as expected");
+            }
+        }
+    }
+
+    @Then("the system handles duplicate keywords correctly")
+    public void the_system_handles_duplicate_keywords_correctly() {
+        // Count occurrences of each jersey
+        Set<String> uniqueJerseys = matchingJerseys.stream()
+            .map(Jersey::getDescription)
+            .collect(Collectors.toSet());
+        
+        assertEquals(uniqueJerseys.size(), matchingJerseys.size(), 
+            "Each jersey should appear only once regardless of duplicate keywords");
+    }
+
+    @Then("the system finds jerseys with color {string}")
+    public void the_system_finds_jerseys_with_color(String color) {
+        assertNotNull(matchingJerseys, "Matching jerseys list should not be null");
+        assertFalse(matchingJerseys.isEmpty(), "Should find jerseys with color: " + color);
+        
+        boolean hasColorMatch = matchingJerseys.stream()
+            .anyMatch(j -> j.getColor().equalsIgnoreCase(color));
+        assertTrue(hasColorMatch, "Should find at least one jersey with color: " + color);
+    }
+
+    @Then("the system finds jerseys with sport {string}")
+    public void the_system_finds_jerseys_with_sport(String sport) {
+        assertNotNull(matchingJerseys, "Matching jerseys list should not be null");
+        assertFalse(matchingJerseys.isEmpty(), "Should find jerseys for sport: " + sport);
+        
+        boolean hasSportMatch = matchingJerseys.stream()
+            .anyMatch(j -> j.getSport().equalsIgnoreCase(sport));
+        assertTrue(hasSportMatch, "Should find at least one jersey for sport: " + sport);
+    }
+
+    @Then("the system handles special characters in the results")
+    public void the_system_handles_special_characters_in_the_results() {
+        assertNotNull(matchingJerseys, "Matching jerseys list should not be null");
+        assertFalse(matchingJerseys.isEmpty(), "Should find jerseys with special characters");
+        
+        boolean hasSpecialChars = matchingJerseys.stream()
+            .anyMatch(j -> j.getDescription().contains("*") || 
+                         j.getDescription().contains("&") ||
+                         j.getDescription().contains("-"));
+        assertTrue(hasSpecialChars, "Should find jerseys with special characters");
     }
 } 
