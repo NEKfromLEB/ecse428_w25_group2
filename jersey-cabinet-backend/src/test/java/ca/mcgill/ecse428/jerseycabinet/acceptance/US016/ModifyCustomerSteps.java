@@ -1,4 +1,4 @@
-package ca.mcgill.ecse428.jerseycabinet.acceptance;
+package ca.mcgill.ecse428.jerseycabinet.acceptance.US016;
 
 import ca.mcgill.ecse428.jerseycabinet.dao.CustomerRepository;
 import ca.mcgill.ecse428.jerseycabinet.model.Customer;
