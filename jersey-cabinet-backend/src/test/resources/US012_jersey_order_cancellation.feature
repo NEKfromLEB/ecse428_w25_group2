@@ -48,6 +48,11 @@ Feature: Customer Jersey Order Cancellation
     And the jerseys' request states should be changed to "Listed"
     And I should receive a refund of "<price>" for the purchases
 
+    Examples:
+      | jersey_id | price |
+      | 1003      | 150   |
+      | 1004      | 200   |
+
   Scenario: Customer attempts to cancel a non-existent order
     When I try to cancel an order with jersey ID "9999" that doesn't exist
     Then I should see an error message "Order not found."
